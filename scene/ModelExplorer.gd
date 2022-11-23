@@ -13,7 +13,7 @@ func _ready():
 func _on_file_dropped(files:PackedStringArray):
 	if files.size() == 1:
 		var ext = files[0].get_extension()
-		if ext == "glb" or ext == "gltf":
+		if ext == "glb" or ext == "gltf" or ext == "vrm":
 			gltf_start_to_load.emit()
 			
 			# unload previous loaded scene
@@ -26,9 +26,14 @@ func _on_file_dropped(files:PackedStringArray):
 			
 			gltf_start_to_load.emit()
 
+
 func _load_gltf(file:String):
 	var gltf_doc = GLTFDocument.new()
 	var gltf_state = GLTFState.new()
+	if file.ends_with("vrm"):
+		const gltf_vrm_extension = preload("res://addons/vrm/vrm_extension.gd")
+		gltf_doc.register_gltf_document_extension(gltf_vrm_extension.new(), true)
+	
 	var err = gltf_doc.append_from_file(file, gltf_state)
 	
 	var success = false

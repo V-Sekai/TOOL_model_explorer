@@ -151,8 +151,8 @@ grow_horizontal = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/ToolPanel"]
 layout_mode = 2
-offset_right = 172.0
-offset_bottom = 163.0
+offset_right = 143.0
+offset_bottom = 93.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
@@ -167,7 +167,7 @@ offset_bottom = 147.0
 
 [node name="Label" type="Label" parent="Node/ToolPanel/MarginContainer/Row"]
 layout_mode = 2
-offset_right = 140.0
+offset_right = 111.0
 offset_bottom = 26.0
 text = "Tool"
 
