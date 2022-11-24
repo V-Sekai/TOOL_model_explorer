@@ -14,3 +14,7 @@ A gltf model viewer made by Godot 4
 - Show animations inside
   - Quick play animation
 - Toggle wireframe mode
+
+## nightly.link
+
+[Builds](https://nightly.link/V-Sekai-fire/VSK_model_explorer/workflows/build-project/v-sekai)
