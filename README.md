@@ -17,4 +17,4 @@ A gltf model viewer made by Godot 4
 
 ## nightly.link
 
-[Builds](https://nightly.link/V-Sekai-fire/VSK_model_explorer/workflows/build-project/v-sekai)
+[Windows build](https://nightly.link/V-Sekai-fire/VSK_model_explorer/workflows/build-project/v-sekai/vsekai_windows_release_x86_64.zip)
