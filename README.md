@@ -1,7 +1,12 @@
 # Model explorer
+
 A gltf model viewer made by Godot 4
 
 ![screenshot](https://github.com/AllenDang/model_explorer_godot4/raw/main/screenshots/Screenshot.png)
+
+## Release notes
+
+Only `.glb` binary files will fully work. `.gltf` files will be missing textures.
 
 ## Features
 
