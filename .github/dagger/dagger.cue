@@ -39,7 +39,7 @@ godot: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot.git"
-		ref:    "49d0f4c3d88ce0f8a6e597889a247e7650bf641d"
+		ref:    "9d2f4ad098fa1ad1f8022f4f652cb3ef02a6472b"
 	}
 }
 godot_groups_modules: {
@@ -253,8 +253,8 @@ dagger.#Plan & {
 					cp /v-sekai-game/godot/bin/windows_release_x86_64.pdb /v-sekai-game/build/windows_release_x86_64.pdb
 					mkdir -p /v-sekai-game/build/windows_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Windows Desktop" /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe --path /v-sekai-game/project && [ -f /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe ]
 					cp /v-sekai-game/godot/bin/windows_release_x86_64.pdb /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.pdb					
-					# cp /v-sekai-game/godot/bin/linux_release.x86_64 /v-sekai-game/build/linux_release.x86_64
-					# mkdir -p /v-sekai-game/build/linux_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Linux/X11" /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd --path /v-sekai-game/project && [ -f /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd ]
+					cp /v-sekai-game/godot/bin/linux_release.x86_64 /v-sekai-game/build/linux_release.x86_64
+					mkdir -p /v-sekai-game/build/linux_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Linux/X11" /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd --path /v-sekai-game/project && [ -f /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd ]
 					"""#
 				export:
 					directories:
