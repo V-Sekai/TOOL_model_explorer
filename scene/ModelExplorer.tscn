@@ -66,7 +66,6 @@ offset_right = 300.0
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/InfoPanel"]
-layout_mode = 2
 offset_right = 300.0
 offset_bottom = 1800.0
 theme_override_constants/margin_left = 8
@@ -75,14 +74,12 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="Row" type="VBoxContainer" parent="Node/InfoPanel/MarginContainer"]
-layout_mode = 2
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 292.0
 offset_bottom = 1792.0
 
 [node name="Label" type="Label" parent="Node/InfoPanel/MarginContainer/Row"]
-layout_mode = 2
 offset_right = 284.0
 offset_bottom = 29.0
 text = "Information"
@@ -104,7 +101,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/LoadingPanel"]
-layout_mode = 2
 offset_right = 400.0
 offset_bottom = 262.0
 theme_override_constants/margin_left = 16
@@ -113,7 +109,6 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Node/LoadingPanel/MarginContainer"]
-layout_mode = 2
 offset_left = 100.0
 offset_top = 16.0
 offset_right = 300.0
@@ -122,7 +117,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Node/LoadingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_right = 200.0
 offset_bottom = 200.0
 value = 20.0
@@ -132,7 +126,6 @@ texture_progress = ExtResource("6_18sj1")
 script = ExtResource("7_mw4jw")
 
 [node name="Label" type="Label" parent="Node/LoadingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_left = 62.0
 offset_top = 204.0
 offset_right = 137.0
@@ -150,7 +143,6 @@ offset_bottom = 93.0
 grow_horizontal = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/ToolPanel"]
-layout_mode = 2
 offset_right = 143.0
 offset_bottom = 93.0
 theme_override_constants/margin_left = 16
@@ -159,27 +151,23 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Row" type="VBoxContainer" parent="Node/ToolPanel/MarginContainer"]
-layout_mode = 2
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 181.0
 offset_bottom = 166.0
 
 [node name="Label" type="Label" parent="Node/ToolPanel/MarginContainer/Row"]
-layout_mode = 2
 offset_right = 111.0
 offset_bottom = 26.0
 text = "Tool"
 
 [node name="CbWireframe" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-layout_mode = 2
 offset_top = 30.0
 offset_right = 140.0
 offset_bottom = 61.0
 text = "Wireframe (W)"
 
 [node name="CbExplode" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-layout_mode = 2
 offset_top = 65.0
 offset_right = 140.0
 offset_bottom = 96.0
@@ -187,7 +175,6 @@ tooltip_text = "Move all meshes away from the center to easily check how may mes
 text = "Explode (E)"
 
 [node name="CbHideGrid" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-layout_mode = 2
 offset_top = 100.0
 offset_right = 140.0
 offset_bottom = 131.0
@@ -216,7 +203,6 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Label" type="Label" parent="Node/MessagePanel/MarginContainer"]
-layout_mode = 2
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 323.0
