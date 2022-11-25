@@ -78,7 +78,7 @@ func _on_root_gltf_is_loaded(success, gltf):
 
 		# Mesh section
 		var material_array: Array[Material]
-		var texture_array: Array[Texture2D]
+		var texture_array: Array[Variant]
 
 		var add_texture_to_array = func(texture):
 			if texture != null and not texture_array.has(texture):
@@ -126,6 +126,20 @@ func _on_root_gltf_is_loaded(success, gltf):
 						add_texture_to_array.call(mat.normal_texture)
 						add_texture_to_array.call(mat.clearcoat_texture)
 						add_texture_to_array.call(mat.subsurf_scatter_texture)
+					elif mat is ShaderMaterial:
+						var parameters : Array[String] = [
+							"_MainTex",
+							"_ShadeTexture",
+							"_ReceiveShadowTexture",
+							"_ShadingGradeTexture",
+							"_RimTexture",
+							"_SphereAdd",
+							"_EmissionMap",
+						]
+						for parameter_name in parameters:
+							var parameter = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
+							if parameter is Image:
+								add_texture_to_array.call(parameter)
 
 		Row.add_child(meshInfoTree)
 
@@ -162,6 +176,27 @@ func _on_root_gltf_is_loaded(success, gltf):
 						img.fill(mat.albedo_color)
 
 						matItem.set_icon(0, ImageTexture.create_from_image(img))
+				elif mat is ShaderMaterial:
+					var parameters : Array[String] = [
+						"_MainTex",
+						"_ShadeTexture",
+						"_ReceiveShadowTexture",
+						"_ShadingGradeTexture",
+						"_RimTexture",
+						"_SphereAdd",
+						"_EmissionMap",
+					]
+					var img:Image
+					for parameter_name in parameters:
+						var parameter : Variant = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
+						if parameter is Image and parameter_name == "_MainTex":
+							matItem.set_text(0, parameter_name.trim_prefix("_").capitalize())
+							img = mat.albedo_texture.get_image()
+							img.resize(32, 32)
+						elif parameter is Image:
+							img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+							img.fill(parameter)
+							matItem.set_icon(0, ImageTexture.create_from_image(img))
 
 			Row.add_child(materialInfoTree)
 
@@ -182,14 +217,23 @@ func _on_root_gltf_is_loaded(success, gltf):
 			var texParent = textureInfoTree.create_item()
 
 			for tex in texture_array:
-				tex = tex as Texture2D
-				var img = tex.get_image()
-				img.resize(50, 50)
+				if tex is Texture2D:
+					var img = (tex as Texture2D).get_image()
+					img.resize(50, 50)
 
-				var texItem:TreeItem = textureInfoTree.create_item(texParent)
-				texItem.set_icon(0, ImageTexture.create_from_image(img))
-				texItem.set_text(0, "[%d x %d] %s" % [tex.get_width(), tex.get_height(), calc_data_size(tex.get_image().get_data().size())])
-				texItem.set_metadata(0, tex)
+					var texItem:TreeItem = textureInfoTree.create_item(texParent)
+					texItem.set_icon(0, ImageTexture.create_from_image(img))
+					texItem.set_text(0, "[%d x %d] %s" % [tex.get_width(), tex.get_height(), calc_data_size(tex.get_image().get_data().size())])
+					texItem.set_metadata(0, tex)
+				elif tex is Image:
+					var img : Image = tex
+					img.resize(50, 50)
+
+					var texItem:TreeItem = textureInfoTree.create_item(texParent)
+					texItem.set_icon(0, ImageTexture.create_from_image(img))
+					texItem.set_text(0, "[%d x %d] %s" % [tex.get_width(), tex.get_height(), calc_data_size(tex.get_image().get_data().size())])
+					texItem.set_metadata(0, tex)
+					
 
 
 			Row.add_child(textureInfoTree)
@@ -266,7 +310,7 @@ func _on_mesh_item_double_clicked(tree:Tree):
 func _on_material_item_double_clicked(tree:Tree):
 	var matItem:TreeItem = tree.get_selected()
 	var mat:Material = matItem.get_metadata(0)
-	if mat != null and mat is BaseMaterial3D:
+	if mat != null and mat is Material:
 		if matViewer != null:
 			matViewer.queue_free()
 

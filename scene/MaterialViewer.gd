@@ -4,9 +4,9 @@ extends PanelContainer
 @onready var MatNameLabel:Label = $VBoxContainer/HBoxContainer/MarginContainer/Label
 @onready var MatTree:Tree = $VBoxContainer/Tree
 
-var materialView:StandardMaterial3D
+var materialView:Material
 
-func set_material_view(mat:StandardMaterial3D):
+func set_material_view(mat:Material):
 	materialView = mat
 
 # Called when the node enters the scene tree for the first time.
@@ -45,23 +45,68 @@ func _create_property(root:TreeItem, pname:String, value):
 		img.resize(50, 50)
 		item.set_icon(1, ImageTexture.create_from_image(img))
 		item.set_metadata(1, value)
-	else:
-		if value is Color:
-			var img = Image.create(50, 20, false, Image.FORMAT_RGBA8)
-			img.fill(value)
+	if value is Image:
+		var img = value as Image
+		img.resize(50, 50)
+		item.set_icon(1, ImageTexture.create_from_image(img))
+		item.set_metadata(1, value)
+	elif value is Color:
+		var img = Image.create(50, 20, false, Image.FORMAT_RGBA8)
+		img.fill(value)
+		item.set_icon(1, ImageTexture.create_from_image(img))
+	elif value is Plane:
+		var plane : Plane = (value as Plane)
+		if pname.to_lower().find("color") != -1:
+			var img : Image = Image.create(50, 20, false, Image.FORMAT_RGBA8)
+			img.fill(Color(plane.x, plane.y, plane.z, plane.d))
 			item.set_icon(1, ImageTexture.create_from_image(img))
 		else:
-			item.set_text(1, "%s" % value)
+			var vector_4 : Vector4 = Vector4(plane.x, plane.y, plane.z, plane.d)
+			item.set_text(1, "%s" % vector_4)
+	else:
+		item.set_text(1, "%s" % value)
 
-func _setup_material_property(mat:StandardMaterial3D):
+func _setup_material_property(mat:Material):
 	var root = MatTree.create_item()
 	
-	_create_property(root, "albedo", mat.albedo_color)
-	_create_property(root, "albedo texture", mat.albedo_texture)
-	_create_property(root, "rough/metal", Vector2(mat.roughness, mat.metallic))
-	_create_property(root, "rough/metal texture", mat.roughness_texture)
-	_create_property(root, "emission", mat.emission)
-	_create_property(root, "emission texture", mat.emission_texture)
-	_create_property(root, "transparency", mat.transparency)
-	_create_property(root, "normal map", mat.normal_texture)
-	_create_property(root, "height map", mat.heightmap_texture)
+	if mat is StandardMaterial3D:
+		_create_property(root, "albedo", mat.albedo_color)
+		_create_property(root, "albedo texture", mat.albedo_texture)
+		_create_property(root, "rough/metal", Vector2(mat.roughness, mat.metallic))
+		_create_property(root, "rough/metal texture", mat.roughness_texture)
+		_create_property(root, "emission", mat.emission)
+		_create_property(root, "emission texture", mat.emission_texture)
+		_create_property(root, "transparency", mat.transparency)
+		_create_property(root, "normal map", mat.normal_texture)
+		_create_property(root, "height map", mat.heightmap_texture)
+	elif mat is ShaderMaterial:
+		var parameters : Array[String] = [
+			"_Cutoff",
+			"_Color",
+			"_ShadeColor",
+			"_MainTex",
+			"_MainTex_ST",
+			"_ShadeTexture",
+			"_BumpScale",
+			"_BumpMap",
+			"_ReceiveShadowTexture",
+			"_ReceiveShadowRate",
+			"_ShadingGradeTexture",
+			"_ShadingGradeRate",
+			"_ShadeShift",
+			"_ShadeToony",
+			"_LightColorAttenuation",
+			"_IndirectLightIntensity",
+			"_RimTexture",
+			"_RimColor",
+			"_RimLightingMix",
+			"_RimFresnelPower",
+			"_RimLift",
+			"_SphereAdd",
+			"_EmissionColor",
+			"_AlphaCutoutEnable",
+		]
+		for parameter_name in parameters:
+			var parameter : Variant = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
+			var capitalized_parameter_name = parameter_name.capitalize()
+			_create_property(root, capitalized_parameter_name, parameter)
