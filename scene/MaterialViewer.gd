@@ -40,12 +40,12 @@ func _create_property(root:TreeItem, pname:String, value):
 	var item:TreeItem = MatTree.create_item(root)
 	item.set_text(0, pname)
 	
-	if value is Texture2D:
+	if value is Texture2D or value is ImageTexture:
 		var img = value.get_image() as Image
 		img.resize(50, 50)
 		item.set_icon(1, ImageTexture.create_from_image(img))
 		item.set_metadata(1, value)
-	if value is Image:
+	elif value is Image:
 		var img = value as Image
 		img.resize(50, 50)
 		item.set_icon(1, ImageTexture.create_from_image(img))
@@ -65,7 +65,7 @@ func _create_property(root:TreeItem, pname:String, value):
 			item.set_text(1, "%s" % vector_4)
 	else:
 		item.set_text(1, "%s" % value)
-
+	
 func _setup_material_property(mat:Material):
 	var root = MatTree.create_item()
 	
