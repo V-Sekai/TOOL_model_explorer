@@ -138,8 +138,7 @@ func _on_root_gltf_is_loaded(success, gltf):
 						]
 						for parameter_name in parameters:
 							var parameter = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
-							if parameter is Image:
-								add_texture_to_array.call(parameter)
+							add_texture_to_array.call(parameter)
 
 		Row.add_child(meshInfoTree)
 
