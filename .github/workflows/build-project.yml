@@ -71,6 +71,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: "vsekai_windows_release_x86_64"
-          path: build/windows_release_x86_64
+          name: "VSK_model_explorer_windows_release_x86_64"
+          path: build/VSK_model_explorer_windows_release_x86_64
           retention-days: 14
