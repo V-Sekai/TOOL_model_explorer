@@ -18,7 +18,7 @@ var texViewer
 const MaterialViewer = preload("res://scene/MaterialViewer.tscn")
 var matViewer
 
-var animationPlayer:AnimationPlayer
+var animationPlayers: Array[Node]
 
 const DYNAMIC_CONTROL_GROUP = "dynamic control"
 
@@ -47,7 +47,7 @@ func _on_root_gltf_start_to_load():
 	for ctl in dyna_controls:
 		ctl.queue_free()
 
-func _on_root_gltf_is_loaded(success, gltf):
+func _on_root_gltf_is_loaded(success, gltf : Node):
 	if not success:
 		MsgLabel.text = "Failed to load model..."
 		MsgPanel.visible = true
@@ -57,7 +57,7 @@ func _on_root_gltf_is_loaded(success, gltf):
 	ToolPanel.visible = true
 	LoadingPanel.visible = false
 
-	animationPlayer = gltf.find_child("AnimationPlayer")
+	animationPlayers = gltf.find_children("*", "AnimationPlayer")
 
 	var meshes:Array[Node] = gltf.find_children("*", "MeshInstance3D")
 
@@ -237,7 +237,9 @@ func _on_root_gltf_is_loaded(success, gltf):
 
 			Row.add_child(textureInfoTree)
 
-	if animationPlayer != null:
+	for animationPlayer in animationPlayers:
+		if animationPlayer == null:
+			continue
 		var animationArray:Array[String]
 
 		var animLibList:Array[StringName] = animationPlayer.get_animation_library_list()
@@ -326,9 +328,26 @@ func _on_texture_double_clicked(tree:Tree):
 func _on_animation_item_double_clicked(tree:Tree):
 	var animItem:TreeItem = tree.get_selected()
 	var anim:String = animItem.get_text(0)
-	if animationPlayer != null:
-		animationPlayer.play(anim)
+	for animationPlayer in animationPlayers:
+		if animationPlayer != null and animationPlayer.has_animation(anim):
+			var player : AnimationPlayer = animationPlayer
+			var callable : Callable = Callable(self, "_on_animation_item_finished")
+			callable = callable.bind(player, animationPlayers)
+			if not player.animation_finished.is_connected(callable):
+				player.animation_finished.connect(callable)
+			player.queue(anim)
+			break
 
+
+func _on_animation_item_finished(animation_name : StringName, player : AnimationPlayer, players : Array[Node]):
+	for animationPlayer in animationPlayers:
+		if animationPlayer == null:
+			continue
+		for animation in (animationPlayer as AnimationPlayer).get_animation_list():
+			animationPlayer.assigned_animation = animation
+			animationPlayer.seek(0)
+			animationPlayer.advance(0)
+	player.assigned_animation = animation_name
 
 func _show_texture_viewer(tex):
 	if texViewer != null:
