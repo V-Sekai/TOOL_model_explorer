@@ -22,4 +22,4 @@ Only `.glb` binary files will fully work. `.gltf` files will be missing textures
 
 ## nightly.link
 
-[Windows build](https://nightly.link/V-Sekai-fire/VSK_model_explorer/workflows/build-project/v-sekai/vsekai_windows_release_x86_64.zip)
+[Windows build](https://nightly.link/V-Sekai-fire/VSK_model_explorer/workflows/build-project/v-sekai/VSK_model_explorer_windows_release_x86_64)
