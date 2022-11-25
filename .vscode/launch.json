@@ -10,7 +10,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}",
         "args": ["--path", ".", "-e"],
-        "program": "${workspaceFolder}/build/windows_release_x86_64.exe",
+        "program": "${workspaceFolder}/build/windows_release_x86_64/VSK_model_explorer_windows.exe",
         "preLaunchTask": "dagger do build",
       },
       {
@@ -19,7 +19,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}",
         "args": ["--path", ".", "-e"],
-        "program": "${workspaceFolder}/build/windows_release_x86_64.exe",
+        "program": "${workspaceFolder}/build/windows_release_x86_64/VSK_model_explorer_windows.exe",
       },
       {
         "name": "Launch the game",
@@ -27,7 +27,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}",
         "args": ["--path", "."],
-        "program": "${workspaceFolder}/build/windows_release_x86_64.exe",
+        "program": "${workspaceFolder}/build/windows_release_x86_64/VSK_model_explorer_windows.exe",
       },
     ]
   }
