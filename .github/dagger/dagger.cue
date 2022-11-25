@@ -226,6 +226,7 @@ dagger.#Plan & {
 					fi
 					rm -rf /godot_game/.godot
 					cp /godot_game/godot/bin/windows_release_x86_64.exe /godot_game/build/windows_release_x86_64.exe
+					cp /godot_game/godot/bin/godot.windows.template_release.x86_64.llvm.pdb /godot_game/build/godot.windows.template_release.x86_64.llvm.pdb
 					mkdir -p /godot_game/build/windows_release_x86_64/ && mkdir -p /godot_game/project/.godot/editor && mkdir -p /godot_game/project/.godot/imported && chmod +x /godot_game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/godot_game/.local/share/ /godot_game/godot/bin/linux_editor.x86_64 --headless --export-release "Windows Desktop" /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe --path /godot_game/project && [ -f /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe ]
 					cp /godot_game/godot/bin/windows_release_x86_64.pdb /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.pdb					
 					"""#
