@@ -11,8 +11,6 @@ data_*/
 .godot
 target/ModelExplorer.app/Contents
 target
-.github/dagger_windows/.dagger_storage
-.github/dagger_windows/cue.mod
-.github/dagger_linux/cue.mod
-.github/dagger_linux/.dagger_storage
+.github/dagger/.dagger_storage
+.github/dagger/cue.mod
 build
