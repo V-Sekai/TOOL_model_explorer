@@ -14,3 +14,4 @@ target
 .github/dagger/.dagger_storage
 .github/dagger/cue.mod
 build
+third_party
