@@ -14,11 +14,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://scene/CustomCanvas.gd"
 }, {
-"base": "Node",
-"class": &"DrawUVTex",
-"language": &"GDScript",
-"path": "res://script/DrawUVTex.gd"
-}, {
 "base": "Node3D",
 "class": &"VRMTopLevel",
 "language": &"GDScript",
@@ -31,7 +26,6 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "CustomCanvas": "",
-"DrawUVTex": "",
 "VRMTopLevel": "",
 "Worker": ""
 }
@@ -51,7 +45,7 @@ config/windows_native_icon="res://resource/icon/app_icon.ico"
 [autoload]
 
 GlobalSignal="*res://script/GlobalSignal.gd"
-DrawUvTex="*res://script/DrawUVTex.gd"
+MeshExt="*res://script/MeshExt.gd"
 
 [display]
 

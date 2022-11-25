@@ -24,6 +24,11 @@ const DYNAMIC_CONTROL_GROUP = "dynamic control"
 
 var maxAabb:AABB
 
+class MeshInfo:
+	var name:String
+	var faceCount:int
+	var mesh:MeshInstance3D
+
 func _ready():
 	GlobalSignal.trigger_texture_viewer.connect(_show_texture_viewer)
 
@@ -62,6 +67,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	var meshes:Array[Node] = gltf.find_children("*", "MeshInstance3D")
 
 	if meshes.size() > 0:
+		# Create tree panel
 		var meshInfoTree:Tree = Tree.new()
 		meshInfoTree.add_to_group(DYNAMIC_CONTROL_GROUP)
 		meshInfoTree.columns = 1
@@ -77,14 +83,9 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 		var meshParent:TreeItem = meshInfoTree.create_item()
 
 		# Mesh section
-		var material_array: Array[Material]
-		var texture_array: Array[Variant]
-
-		var add_texture_to_array = func(texture):
-			if texture != null and not texture_array.has(texture):
-				texture_array.append(texture)
-
-		const MAX_NAME_LENGTH = 30
+		var meshArray:Array[MeshInfo]
+		
+		const MAX_NAME_LENGTH = 20
 		for mesh in meshes:
 			mesh = mesh as MeshInstance3D
 
@@ -106,41 +107,48 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 			meshItem.set_tooltip_text(0, mesh.name)
 			meshItem.set_metadata(0, mesh)
 
-			# Gather material
+		Row.add_child(meshInfoTree)
+		
+		var material_array: Array[Material]
+		var texture_array: Array[Variant]
+			
+		var add_texture_to_array = func(texture):
+			if texture != null and not texture_array.has(texture):
+				texture_array.append(texture)
+
+		for mesh in meshes:
 			for si in mesh.mesh.get_surface_count():
 				var mat = mesh.get_active_material(si) as Material
 				if not material_array.has(mat):
 					material_array.append(mat)
 
-					if mat is BaseMaterial3D:
-						# Gather texture
-						add_texture_to_array.call(mat.albedo_texture)
-						add_texture_to_array.call(mat.roughness_texture)
-						add_texture_to_array.call(mat.metallic_texture)
-						add_texture_to_array.call(mat.emission_texture)
-						add_texture_to_array.call(mat.heightmap_texture)
-						add_texture_to_array.call(mat.ao_texture)
-						add_texture_to_array.call(mat.rim_texture)
-						add_texture_to_array.call(mat.refraction_texture)
-						add_texture_to_array.call(mat.heightmap_texture)
-						add_texture_to_array.call(mat.normal_texture)
-						add_texture_to_array.call(mat.clearcoat_texture)
-						add_texture_to_array.call(mat.subsurf_scatter_texture)
-					elif mat is ShaderMaterial:
-						var parameters : Array[String] = [
-							"_MainTex",
-							"_ShadeTexture",
-							"_ReceiveShadowTexture",
-							"_ShadingGradeTexture",
-							"_RimTexture",
-							"_SphereAdd",
-							"_EmissionMap",
-						]
-						for parameter_name in parameters:
-							var parameter = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
-							add_texture_to_array.call(parameter)
-
-		Row.add_child(meshInfoTree)
+				if mat is BaseMaterial3D:
+					# Gather texture
+					add_texture_to_array.call(mat.albedo_texture)
+					add_texture_to_array.call(mat.roughness_texture)
+					add_texture_to_array.call(mat.metallic_texture)
+					add_texture_to_array.call(mat.emission_texture)
+					add_texture_to_array.call(mat.heightmap_texture)
+					add_texture_to_array.call(mat.ao_texture)
+					add_texture_to_array.call(mat.rim_texture)
+					add_texture_to_array.call(mat.refraction_texture)
+					add_texture_to_array.call(mat.heightmap_texture)
+					add_texture_to_array.call(mat.normal_texture)
+					add_texture_to_array.call(mat.clearcoat_texture)
+					add_texture_to_array.call(mat.subsurf_scatter_texture)
+				elif mat is ShaderMaterial:
+					var parameters : Array[String] = [
+						"_MainTex",
+						"_ShadeTexture",
+						"_ReceiveShadowTexture",
+						"_ShadingGradeTexture",
+						"_RimTexture",
+						"_SphereAdd",
+						"_EmissionMap",
+					]
+					for parameter_name in parameters:
+						var parameter = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
+						add_texture_to_array.call(parameter)
 
 		# Material section
 		if material_array.size() > 0:
@@ -174,7 +182,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 						img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 						img.fill(mat.albedo_color)
 
-						matItem.set_icon(0, ImageTexture.create_from_image(img))
+					matItem.set_icon(0, ImageTexture.create_from_image(img))
 				elif mat is ShaderMaterial:
 					var parameters : Array[String] = [
 						"_MainTex",
@@ -195,7 +203,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 						elif parameter is Image:
 							img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 							img.fill(parameter)
-							matItem.set_icon(0, ImageTexture.create_from_image(img))
+					matItem.set_icon(0, ImageTexture.create_from_image(img))
 
 			Row.add_child(materialInfoTree)
 
@@ -232,7 +240,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 					texItem.set_icon(0, ImageTexture.create_from_image(img))
 					texItem.set_text(0, "[%d x %d] %s" % [tex.get_width(), tex.get_height(), calc_data_size(tex.get_image().get_data().size())])
 					texItem.set_metadata(0, tex)
-					
+				
 
 
 			Row.add_child(textureInfoTree)
@@ -275,6 +283,14 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 
 			Row.add_child(animationTree)
 
+	# Create convex collision
+	for mesh in meshes:
+		mesh = mesh as MeshInstance3D
+		mesh.create_convex_collision()
+
+		var staticBody:StaticBody3D = mesh.find_child("%s_col" % mesh.name)
+		staticBody.mouse_entered.connect(_on_mesh_mouse_entered.bind(mesh))
+		staticBody.mouse_exited.connect(_on_mesh_mouse_exited.bind(mesh))
 
 func calc_data_size(byte_size:int) -> String:
 	var unit = "KB"
@@ -304,9 +320,9 @@ func _on_mesh_item_double_clicked(tree:Tree):
 	var meshItem:TreeItem = tree.get_selected()
 	var mesh:MeshInstance3D = meshItem.get_metadata(0)
 	if mesh != null:
-#		var uvLines = DrawUvTex.draw_uv_texture(mesh.mesh)
-#		if uvLines.size() > 0:
-#			GlobalSignal.trigger_texture_viewer.emit(uvLines)
+		var uvLines = MeshExt.draw_uv_texture(mesh.mesh)
+		if uvLines.size() > 0:
+			GlobalSignal.trigger_texture_viewer.emit(uvLines)
 
 		GlobalSignal.reposition_camera.emit(mesh.mesh.get_aabb())
 
@@ -376,3 +392,9 @@ func _on_cb_explode_toggled(button_pressed):
 func _on_cb_hide_grid_toggled(button_pressed):
 	if Grid != null:
 		Grid.visible = not button_pressed
+
+func _on_mesh_mouse_entered(mesh: MeshInstance3D):
+	MeshExt.mesh_create_outline(mesh)
+	
+func _on_mesh_mouse_exited(mesh: MeshInstance3D):
+	MeshExt.mesh_remove_outline(mesh)
