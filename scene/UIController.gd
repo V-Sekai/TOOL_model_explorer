@@ -264,7 +264,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 			animationTree.item_activated.connect(_on_animation_item_double_clicked.bind(animationTree))
 
 			animationTree.set_column_title(0, "Animation (%d)" % animationArray.size())
-			animationTree.set_column_title(1, "")
+			animationTree.select_mode = Tree.SELECT_ROW
 
 			var animRoot = animationTree.create_item()
 
