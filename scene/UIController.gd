@@ -275,6 +275,14 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 
 			Row.add_child(animationTree)
 
+	# Create convex collision
+	for mesh in meshes:
+		mesh = mesh as MeshInstance3D
+		mesh.create_convex_collision()
+
+		var staticBody:StaticBody3D = mesh.find_child("%s_col" % mesh.name)
+		staticBody.mouse_entered.connect(_on_mesh_mouse_entered.bind(mesh))
+		staticBody.mouse_exited.connect(_on_mesh_mouse_exited.bind(mesh))
 
 func calc_data_size(byte_size:int) -> String:
 	var unit = "KB"
@@ -304,9 +312,9 @@ func _on_mesh_item_double_clicked(tree:Tree):
 	var meshItem:TreeItem = tree.get_selected()
 	var mesh:MeshInstance3D = meshItem.get_metadata(0)
 	if mesh != null:
-#		var uvLines = DrawUvTex.draw_uv_texture(mesh.mesh)
-#		if uvLines.size() > 0:
-#			GlobalSignal.trigger_texture_viewer.emit(uvLines)
+		var uvLines = MeshExt.draw_uv_texture(mesh.mesh)
+		if uvLines.size() > 0:
+			GlobalSignal.trigger_texture_viewer.emit(uvLines)
 
 		GlobalSignal.reposition_camera.emit(mesh.mesh.get_aabb())
 
@@ -376,3 +384,9 @@ func _on_cb_explode_toggled(button_pressed):
 func _on_cb_hide_grid_toggled(button_pressed):
 	if Grid != null:
 		Grid.visible = not button_pressed
+
+func _on_mesh_mouse_entered(mesh: MeshInstance3D):
+	MeshExt.mesh_create_outline(mesh)
+	
+func _on_mesh_mouse_exited(mesh: MeshInstance3D):
+	MeshExt.mesh_remove_outline(mesh)

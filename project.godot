@@ -51,7 +51,7 @@ config/windows_native_icon="res://resource/icon/app_icon.ico"
 [autoload]
 
 GlobalSignal="*res://script/GlobalSignal.gd"
-DrawUvTex="*res://script/DrawUVTex.gd"
+MeshExt="*res://script/MeshExt.gd"
 
 [display]
 
