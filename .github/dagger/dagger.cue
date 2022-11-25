@@ -82,13 +82,13 @@ fetch_godot: {
 					"""#
 			},
 			bash.#Run & {
-				workdir: "/v-sekai-game/godot"
+				workdir: "/godot_game/godot"
 				script: contents: #"""
 					alternatives --set ld /usr/bin/ld.gold && git lfs install && pip3 install scons
 					"""#
 			},
 			bash.#Run & {
-				workdir: "/v-sekai-game/godot"
+				workdir: "/godot_game/godot"
 				script: contents: #"""
 					mkdir /opt/llvm-mingw && curl -L https://github.com/mstorsjo/llvm-mingw/releases/download/20220323/llvm-mingw-20220323-ucrt-ubuntu-18.04-x86_64.tar.xz | tar -Jxf - --strip 1 -C /opt/llvm-mingw
 					"""#
@@ -101,26 +101,26 @@ fetch_godot: {
 			},
 			docker.#Copy & {
 				contents: godot_groups_modules.output
-				dest:     "/v-sekai-game/godot_groups_modules"
+				dest:     "/godot_game/godot_groups_modules"
 			},
 			docker.#Copy & {
 				contents: godot.output
-				dest:     "/v-sekai-game/godot"
+				dest:     "/godot_game/godot"
 			},
 			bash.#Run & {
 				workdir: "/"
 				script: contents: #"""
-					chown -R v-sekai-game /v-sekai-game
+					chown -R v-sekai-game /godot_game
 					"""#
 			},
 			bash.#Run & {
-				workdir: "/v-sekai-game/godot"
+				workdir: "/godot_game/godot"
 				script: contents: #"""
 					git submodule update --recursive --init
 					"""#
 			},
 			bash.#Run & {
-				workdir: "/v-sekai-game/godot_groups_modules"
+				workdir: "/godot_game/godot_groups_modules"
 				script: contents: #"""
 					git submodule update --recursive --init
 					"""#
@@ -128,7 +128,7 @@ fetch_godot: {
 			docker.#Set & {
 				config: {
 					user:    "v-sekai-game"
-					workdir: "/v-sekai-game"
+					workdir: "/godot_game"
 					entrypoint: ["sh"]
 				}
 			},
@@ -139,58 +139,43 @@ fetch_godot: {
 build_godot_windows:
 	bash.#Run & {
 		input:   fetch_godot.output
-		workdir: "/v-sekai-game/godot"
+		workdir: "/godot_game/godot"
 		script: contents: #"""
-			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=size werror=no platform=windows target=template_release use_fastlto=yes deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
+			mkdir -p /godot_game/build/.scons_cache
+			SCONS_CACHE=/godot_game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=size werror=no platform=windows target=template_release use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
-				"/v-sekai-game/build": dagger.#FS
+				"/godot_game/build": dagger.#FS
 		export:
 			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
+				"/godot_game/godot/bin": dagger.#FS
 	}
-build_godot_linux_editor:
+build_godot_linux_cicd:
 	bash.#Run & {
 		input:   build_godot_windows.output
-		workdir: "/v-sekai-game/godot"
+		workdir: "/godot_game/godot"
 		script: contents: #"""
-			mkdir -p /v-sekai-game/build/.scons_cache			
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=yes deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
+			mkdir -p /godot_game/build/.scons_cache			
+			SCONS_CACHE=/godot_game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
-				"/v-sekai-game/build": dagger.#FS
+				"/godot_game/build": dagger.#FS
 		export:
 			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
-	}
-build_godot_linux_template:
-	bash.#Run & {
-		input:   build_godot_linux_editor.output
-		workdir: "/v-sekai-game/godot"
-		script: contents: #"""
-			mkdir -p /v-sekai-game/build/.scons_cache			
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=size LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=template_release use_fastlto=yes deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
-			"""#
-		export:
-			files:
-				"/v-sekai-game/build": dagger.#FS
-		export:
-			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
+				"/godot_game/godot/bin": dagger.#FS
 	}
 build_godot:
 	bash.#Run & {
-		input:   build_godot_linux_template.output
-		workdir: "/v-sekai-game/godot"
+		input:   build_godot_linux_cicd.output
+		workdir: "/godot_game/godot"
 		script: contents: #"""
-			ls /v-sekai-game/godot/bin
+			ls /godot_game/godot/bin
 			"""#
 		export:
 			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
+				"/godot_game/godot/bin": dagger.#FS
 	}
 
 dagger.#Plan & {
@@ -201,7 +186,7 @@ dagger.#Plan & {
         		exclude: [".github/", ".godot/"]
 			}
 		filesystem: {
-			"../../build": write: contents: actions.build.export.directories."/v-sekai-game/build"
+			"../../build": write: contents: actions.build.export.directories."/godot_game/build"
 		}
 	}
 
@@ -212,53 +197,41 @@ dagger.#Plan & {
 				mounts:
 					"Local FS": {
 						contents: client.filesystem."../../".read.contents
-						dest:     "/v-sekai-game/project"
+						dest:     "/godot_game/project"
 					}
 				input:
 					build_godot.output
 				script: contents: #"""
-					mkdir -p /v-sekai-game/build/.scons_cache /v-sekai-game/project/build/.scons_cache
-					cd /v-sekai-game/godot
+					mkdir -p /godot_game/build/.scons_cache /godot_game/project/build/.scons_cache
+					cd /godot_game/godot
 					ls bin
 					cp bin/godot.windows.template_release.x86_64.llvm.exe bin/windows_release_x86_64.exe 
 					mingw-strip --strip-debug bin/windows_release_x86_64.exe
 					cp bin/godot.windows.template_release.x86_64.llvm.pdb bin/windows_release_x86_64.pdb 
 					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_editor.x86_64
-					cp bin/godot.linuxbsd.template_release.x86_64.llvm bin/linux_release.x86_64
-					strip --strip-debug bin/linux_release.x86_64
-					cp bin/godot.linuxbsd.template_release.x86_64.llvm bin/linux_debug.x86_64
-					strip --strip-debug bin/linux_debug.x86_64	
-					mkdir -p /v-sekai-game/build/
-					rm -rf /v-sekai-game/.local/share/godot/export_templates/
-					mkdir -p /v-sekai-game/.local/share/godot/export_templates/
-					cd /v-sekai-game/.local/share/godot/export_templates/
-					eval `sed -e "s/ = /=/" /v-sekai-game/godot/version.py` && echo $major.$minor.$status > /v-sekai-game/build/version.txt
-					export VERSION=`cat /v-sekai-game/build/version.txt`
-					export BASE_DIR=/v-sekai-game/.local/share/godot/export_templates/ 
+					mkdir -p /godot_game/build/
+					rm -rf /godot_game/.local/share/godot/export_templates/
+					mkdir -p /godot_game/.local/share/godot/export_templates/
+					cd /godot_game/.local/share/godot/export_templates/
+					eval `sed -e "s/ = /=/" /godot_game/godot/version.py` && echo $major.$minor.$status > /godot_game/build/version.txt
+					export VERSION=`cat /godot_game/build/version.txt`
+					export BASE_DIR=/godot_game/.local/share/godot/export_templates/ 
 					export TEMPLATEDIR=$BASE_DIR/$VERSION/
 					mkdir -p $TEMPLATEDIR
-					cp /v-sekai-game/godot/bin/windows_release_x86_64.exe $TEMPLATEDIR/windows_release_x86_64.exe
-					cp /v-sekai-game/godot/bin/windows_release_x86_64.exe $TEMPLATEDIR/windows_debug_x86_64.exe
-					cp /v-sekai-game/godot/bin/linux_debug.x86_64 $TEMPLATEDIR/linux_debug.x86_64
-					cp /v-sekai-game/godot/bin/linux_release.x86_64 $TEMPLATEDIR/linux_release.x86_64
-					cp /v-sekai-game/build/version.txt $TEMPLATEDIR/version.txt
+					cp /godot_game/godot/bin/windows_release_x86_64.exe $TEMPLATEDIR/windows_release_x86_64.exe
+					cp /godot_game/godot/bin/windows_release_x86_64.exe $TEMPLATEDIR/windows_debug_x86_64.exe
+					cp /godot_game/build/version.txt $TEMPLATEDIR/version.txt
 					if [[ -z "${REPO_NAME}" ]]; then
-						export GODOT_ENGINE_GAME_NAME="game_"
+						export GODOT_ENGINE_GAME_NAME="VSK_model_explorer_"
 					fi
-					# TODO: build version
-					# (echo \"## AUTOGENERATED BY BUILD\"; echo \"\"; echo \"const BUILD_LABEL = \\\"$GO_PIPELINE_LABEL\\\"\"; echo \"const BUILD_DATE_STR = \\\"$(date --utc --iso=seconds)\\\"\"; echo \"const BUILD_UNIX_TIME = $(date +%s)\" ) > /v-sekai-game/project/addons/vsk_version/build_constants.gd
-					# End todo.
-					rm -rf /v-sekai-game/.godot
-					cp /v-sekai-game/godot/bin/windows_release_x86_64.exe /v-sekai-game/build/windows_release_x86_64.exe
-					cp /v-sekai-game/godot/bin/windows_release_x86_64.pdb /v-sekai-game/build/windows_release_x86_64.pdb
-					mkdir -p /v-sekai-game/build/windows_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Windows Desktop" /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe --path /v-sekai-game/project && [ -f /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe ]
-					cp /v-sekai-game/godot/bin/windows_release_x86_64.pdb /v-sekai-game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.pdb					
-					cp /v-sekai-game/godot/bin/linux_release.x86_64 /v-sekai-game/build/linux_release.x86_64
-					mkdir -p /v-sekai-game/build/linux_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Linux/X11" /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd --path /v-sekai-game/project && [ -f /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd ]
+					rm -rf /godot_game/.godot
+					cp /godot_game/godot/bin/windows_release_x86_64.exe /godot_game/build/windows_release_x86_64.exe
+					mkdir -p /godot_game/build/windows_release_x86_64/ && mkdir -p /godot_game/project/.godot/editor && mkdir -p /godot_game/project/.godot/imported && chmod +x /godot_game/godot/bin/linux_editor.x86_64 && XDG_DATA_HOME=/godot_game/.local/share/ /godot_game/godot/bin/linux_editor.x86_64 --headless --export-release "Windows Desktop" /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe --path /godot_game/project && [ -f /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.exe ]
+					cp /godot_game/godot/bin/windows_release_x86_64.pdb /godot_game/build/windows_release_x86_64/${GODOT_ENGINE_GAME_NAME}windows.pdb					
 					"""#
 				export:
 					directories:
-						"/v-sekai-game/build": dagger.#FS
+						"/godot_game/build": dagger.#FS
 			}
 	}
 }
