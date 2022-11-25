@@ -65,6 +65,12 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
+[gui]
+
+theme/default_theme_scale=1.2
+theme/default_font_multichannel_signed_distance_field=true
+theme/default_font_generate_mipmaps=true
+
 [input]
 
 toggle_wireframe={
@@ -90,4 +96,5 @@ toggle_grid={
 
 [rendering]
 
+scaling_3d/scale=0.8
 anti_aliasing/quality/msaa_3d=2
