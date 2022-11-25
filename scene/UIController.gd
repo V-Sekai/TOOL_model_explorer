@@ -271,8 +271,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 			for anim in animationArray:
 				var animItem:TreeItem = animationTree.create_item(animRoot)
 				animItem.set_text(0, anim[0])
-				animItem.set_metadata(1, anim[1].name)
-				animItem.set_metadata(1, anim[1])
+				animItem.set_metadata(1, anim)
 
 			Row.add_child(animationTree)
 
@@ -331,7 +330,7 @@ func _on_texture_double_clicked(tree:Tree):
 func _on_animation_item_double_clicked(tree:Tree):
 	var animItem:TreeItem = tree.get_selected()
 	var anim:String = animItem.get_text(0)
-	var animationPlayer:AnimationPlayer = animItem.get_metadata(1)
+	var animationPlayer:AnimationPlayer = animItem.get_metadata(1)[1]
 	if animationPlayer != null and animationPlayer.has_animation(anim):
 		var player : AnimationPlayer = animationPlayer
 		var callable : Callable = Callable(self, "_on_animation_item_finished")
