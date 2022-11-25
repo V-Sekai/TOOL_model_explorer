@@ -240,7 +240,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	for animationPlayer in animationPlayers:
 		if animationPlayer == null:
 			continue
-		var animationArray:Array[String]
+		var animationArray:Array[Array]
 
 		var animLibList:Array[StringName] = animationPlayer.get_animation_library_list()
 		for animLibName in animLibList:
@@ -248,14 +248,14 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 			var animList:Array[StringName] = animLib.get_animation_list()
 			for animName in animList:
 				if String(animLibName).is_empty():
-					animationArray.append(String(animName))
+					animationArray.append([String(animName), animationPlayer])
 				else:
-					animationArray.append("%s/%s" % [animLibName, animName])
+					animationArray.append(["%s/%s" % [animLibName, animName], animationPlayer])
 
 		if animationArray.size() > 0:
 			var animationTree:Tree = Tree.new()
 			animationTree.add_to_group(DYNAMIC_CONTROL_GROUP)
-			animationTree.columns = 1
+			animationTree.columns = 2
 			animationTree.column_titles_visible = true
 			animationTree.hide_root = true
 			animationTree.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -264,12 +264,15 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 			animationTree.item_activated.connect(_on_animation_item_double_clicked.bind(animationTree))
 
 			animationTree.set_column_title(0, "Animation (%d)" % animationArray.size())
+			animationTree.set_column_title(1, "")
 
 			var animRoot = animationTree.create_item()
 
 			for anim in animationArray:
 				var animItem:TreeItem = animationTree.create_item(animRoot)
-				animItem.set_text(0, anim)
+				animItem.set_text(0, anim[0])
+				animItem.set_metadata(1, anim[1].name)
+				animItem.set_metadata(1, anim[1])
 
 			Row.add_child(animationTree)
 
@@ -328,15 +331,14 @@ func _on_texture_double_clicked(tree:Tree):
 func _on_animation_item_double_clicked(tree:Tree):
 	var animItem:TreeItem = tree.get_selected()
 	var anim:String = animItem.get_text(0)
-	for animationPlayer in animationPlayers:
-		if animationPlayer != null and animationPlayer.has_animation(anim):
-			var player : AnimationPlayer = animationPlayer
-			var callable : Callable = Callable(self, "_on_animation_item_finished")
-			callable = callable.bind(player, animationPlayers)
-			if not player.animation_finished.is_connected(callable):
-				player.animation_finished.connect(callable)
-			player.queue(anim)
-			break
+	var animationPlayer:AnimationPlayer = animItem.get_metadata(1)
+	if animationPlayer != null and animationPlayer.has_animation(anim):
+		var player : AnimationPlayer = animationPlayer
+		var callable : Callable = Callable(self, "_on_animation_item_finished")
+		callable = callable.bind(player, animationPlayers)
+		if not player.animation_finished.is_connected(callable):
+			player.animation_finished.connect(callable)
+		player.queue(anim)
 
 
 func _on_animation_item_finished(animation_name : StringName, player : AnimationPlayer, players : Array[Node]):
