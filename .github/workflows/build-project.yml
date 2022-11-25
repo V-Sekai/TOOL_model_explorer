@@ -62,7 +62,7 @@ jobs:
       - name: "Run Dagger"
         uses: dagger/dagger-for-github@v3
         with:
-          workdir: ".github/dagger"
+          workdir: ".github/dagger_windows"
           cmds: |
             project init
             project update
@@ -74,3 +74,37 @@ jobs:
           name: "VSK_model_explorer_windows_release_x86_64"
           path: build/windows_release_x86_64
           retention-days: 14
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Load .scons_cache directory
+        uses: actions/cache@v3
+        with:
+          path: build/.scons_cache
+          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          restore-keys: |
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+
+      - name: "Run Dagger"
+        uses: dagger/dagger-for-github@v3
+        with:
+          workdir: ".github/dagger_linux"
+          cmds: |
+            project init
+            project update
+            do --cache-from type=gha --cache-to type=gha build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: "VSK_model_explorer_linux_release_x86_64"
+          path: build/linux_release_x86_64
+          retention-days: 14
+
