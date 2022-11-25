@@ -77,7 +77,7 @@ func _on_root_gltf_is_loaded(success, gltf):
 		var meshParent:TreeItem = meshInfoTree.create_item()
 
 		# Mesh section
-		var material_array: Array[StandardMaterial3D]
+		var material_array: Array[Material]
 		var texture_array: Array[Texture2D]
 
 		var add_texture_to_array = func(texture):
@@ -108,26 +108,24 @@ func _on_root_gltf_is_loaded(success, gltf):
 
 			# Gather material
 			for si in mesh.mesh.get_surface_count():
-				var mat = mesh.get_active_material(si) as StandardMaterial3D
-				if not mat:
-					print("Invalid material.")
-					continue
+				var mat = mesh.get_active_material(si) as Material
 				if not material_array.has(mat):
 					material_array.append(mat)
 
-					# Gather texture
-					add_texture_to_array.call(mat.albedo_texture)
-					add_texture_to_array.call(mat.roughness_texture)
-					add_texture_to_array.call(mat.metallic_texture)
-					add_texture_to_array.call(mat.emission_texture)
-					add_texture_to_array.call(mat.heightmap_texture)
-					add_texture_to_array.call(mat.ao_texture)
-					add_texture_to_array.call(mat.rim_texture)
-					add_texture_to_array.call(mat.refraction_texture)
-					add_texture_to_array.call(mat.heightmap_texture)
-					add_texture_to_array.call(mat.normal_texture)
-					add_texture_to_array.call(mat.clearcoat_texture)
-					add_texture_to_array.call(mat.subsurf_scatter_texture)
+					if mat is BaseMaterial3D:
+						# Gather texture
+						add_texture_to_array.call(mat.albedo_texture)
+						add_texture_to_array.call(mat.roughness_texture)
+						add_texture_to_array.call(mat.metallic_texture)
+						add_texture_to_array.call(mat.emission_texture)
+						add_texture_to_array.call(mat.heightmap_texture)
+						add_texture_to_array.call(mat.ao_texture)
+						add_texture_to_array.call(mat.rim_texture)
+						add_texture_to_array.call(mat.refraction_texture)
+						add_texture_to_array.call(mat.heightmap_texture)
+						add_texture_to_array.call(mat.normal_texture)
+						add_texture_to_array.call(mat.clearcoat_texture)
+						add_texture_to_array.call(mat.subsurf_scatter_texture)
 
 		Row.add_child(meshInfoTree)
 
@@ -148,23 +146,22 @@ func _on_root_gltf_is_loaded(success, gltf):
 			var matParent:TreeItem = materialInfoTree.create_item()
 
 			for mat in material_array:
-				mat = mat as StandardMaterial3D
-
 				var matItem:TreeItem = materialInfoTree.create_item(matParent)
 				matItem.set_text(0, mat.resource_name)
 				matItem.set_metadata(0, mat)
 
-				var img:Image
-				if mat.albedo_texture != null:
-					matItem.set_text(0, mat.resource_name)
+				if mat is StandardMaterial3D:
+					var img:Image
+					if mat.albedo_texture != null:
+						matItem.set_text(0, mat.resource_name)
 
-					img = mat.albedo_texture.get_image()
-					img.resize(32, 32)
-				else:
-					img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
-					img.fill(mat.albedo_color)
+						img = mat.albedo_texture.get_image()
+						img.resize(32, 32)
+					else:
+						img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+						img.fill(mat.albedo_color)
 
-				matItem.set_icon(0, ImageTexture.create_from_image(img))
+						matItem.set_icon(0, ImageTexture.create_from_image(img))
 
 			Row.add_child(materialInfoTree)
 
@@ -268,8 +265,8 @@ func _on_mesh_item_double_clicked(tree:Tree):
 
 func _on_material_item_double_clicked(tree:Tree):
 	var matItem:TreeItem = tree.get_selected()
-	var mat:StandardMaterial3D = matItem.get_metadata(0)
-	if mat != null:
+	var mat:Material = matItem.get_metadata(0)
+	if mat != null and mat is BaseMaterial3D:
 		if matViewer != null:
 			matViewer.queue_free()
 
