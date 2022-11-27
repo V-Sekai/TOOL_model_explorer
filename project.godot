@@ -14,11 +14,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://scene/CustomCanvas.gd"
 }, {
-"base": "Node",
-"class": &"DrawUVTex",
-"language": &"GDScript",
-"path": "res://script/DrawUVTex.gd"
-}, {
 "base": "Node3D",
 "class": &"VRMTopLevel",
 "language": &"GDScript",
@@ -31,7 +26,6 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "CustomCanvas": "",
-"DrawUVTex": "",
 "VRMTopLevel": "",
 "Worker": ""
 }
@@ -60,10 +54,6 @@ window/size/viewport_height=1800
 window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [gui]
 

@@ -5,7 +5,12 @@ signal gltf_is_loaded(success:bool, gltf:Node)
 
 const Worker = preload("res://script/Worker.gd")
 var worker: Worker
+	
+const gltf_vrm_extension_const = preload("res://addons/vrm/vrm_extension.gd")
 
+var gltf_doc = GLTFDocument.new()
+var gltf_vrm_extension = gltf_vrm_extension_const.new()
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_viewport().files_dropped.connect(_on_file_dropped)
@@ -28,11 +33,9 @@ func _on_file_dropped(files:PackedStringArray):
 
 
 func _load_gltf(file:String):
-	var gltf_doc = GLTFDocument.new()
 	var gltf_state = GLTFState.new()
 	if file.ends_with("vrm"):
-		const gltf_vrm_extension = preload("res://addons/vrm/vrm_extension.gd")
-		gltf_doc.register_gltf_document_extension(gltf_vrm_extension.new(), true)
+		gltf_doc.register_gltf_document_extension(gltf_vrm_extension, true)
 	
 	var err = gltf_doc.append_from_file(file, gltf_state)
 	
@@ -46,3 +49,6 @@ func _load_gltf(file:String):
 		call_deferred("add_child", gltf)
 		
 	gltf_is_loaded.emit(success, gltf)
+
+func _exit_tree():
+	gltf_doc.unregister_gltf_document_extension(gltf_vrm_extension)
