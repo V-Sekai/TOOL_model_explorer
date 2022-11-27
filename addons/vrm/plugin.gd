@@ -1,10 +1,9 @@
 @tool
 extends EditorPlugin
 
-var import_plugin
+var import_plugin = preload("res://addons/vrm/import_vrm.gd").new()
 
 func _enter_tree():
-	import_plugin = preload("res://addons/vrm/import_vrm.gd").new()
 	add_scene_format_importer_plugin(import_plugin)
 
 
