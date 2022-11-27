@@ -6,7 +6,7 @@ A gltf model viewer made by Godot 4
 
 ## Release notes
 
-Only `.glb` binary files will fully work. `.gltf` files will be missing textures.
+`.vrm`, `.glb`, and `.gltf` files can be viewed now.
 
 ## Features
 
