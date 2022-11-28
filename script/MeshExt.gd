@@ -42,12 +42,15 @@ func mesh_create_outline(mesh: MeshInstance3D):
 	var outline = mesh.get_node(OUTLINE)
 	
 	if outline == null:
-		var outlineMesh = mesh.mesh.create_outline(mesh.mesh.get_aabb().size.length() / 300.0)
+		var outlineMesh:Mesh = mesh.mesh.create_outline(mesh.mesh.get_aabb().size.length() / 300.0)
 
 		var instance = MeshInstance3D.new()
 		instance.name = OUTLINE
 		instance.mesh = outlineMesh
 		instance.material_overlay = _outline_material
+		# Bind skeleton
+		if not mesh.skeleton.is_empty():
+			instance.skeleton = "../%s" % mesh.skeleton.get_concatenated_names()
 		
 		instance.add_to_group(OUTLINE)
 
