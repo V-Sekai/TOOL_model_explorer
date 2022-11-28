@@ -58,3 +58,10 @@ func _input(event):
 			self.scale_object_local(Vector3.ONE * (ZOOM_FACTOR))
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			self.scale_object_local(Vector3.ONE * (1/ZOOM_FACTOR))
+
+
+func _on_root_gltf_is_loaded(success, gltf):
+	# Reset camera local scale
+	scale = Vector3.ONE
+	rotation.y = 0
+	CamRotHelper.rotation.x = 0

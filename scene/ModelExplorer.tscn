@@ -182,6 +182,7 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 text = "Drop gltf/glb file into this window"
 
+[connection signal="gltf_is_loaded" from="." to="CamController" method="_on_root_gltf_is_loaded"]
 [connection signal="gltf_is_loaded" from="." to="Node" method="_on_root_gltf_is_loaded"]
 [connection signal="gltf_start_to_load" from="." to="Node" method="_on_root_gltf_start_to_load"]
 [connection signal="toggled" from="Node/ToolPanel/MarginContainer/Row/CbWireframe" to="Node" method="_on_cb_wireframe_toggled"]
