@@ -2,7 +2,7 @@
 
 A gltf model viewer made by Godot 4
 
-![screenshot](https://github.com/AllenDang/model_explorer_godot4/raw/main/screenshots/Screenshot.png)
+![screenshot](hhttps://github.com/V-Sekai-fire/VSK_model_explorer/raw/v-sekai/screenshots/Screenshot.png)
 
 ## Release notes
 
