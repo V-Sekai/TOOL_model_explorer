@@ -39,14 +39,14 @@ godot: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot.git"
-		ref:    "bccf41f6415a7b6f6a37c333c0f2763543e57078"
+		ref:    "8e9434d8ea803353bd5a587c8ac9106f3ee0fea0"
 	}
 }
 godot_groups_modules: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot-modules-groups"
-		ref:    "a8e3a7888b9e00f38dab8829e325b4a562a64f0e"
+		ref:    "a6c028d2ddbd6732e7226ad4bb67415b2db9aa0c"
 	}
 }
 
