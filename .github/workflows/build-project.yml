@@ -69,12 +69,6 @@ jobs:
           ../../bin/dagger-cue project init
           ../../bin/dagger-cue project update
           ../../bin/dagger-cue do build --cache-to type=local,mode=max,dest=../../build/.cicd_cache --cache-from type=local,mode=max,src=../../build/.cicd_cache
-        with:
-          workdir: ".github/dagger"
-          cmds: |
-            project init
-            project update
-            do --cache-from type=gha --cache-to type=gha build
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
