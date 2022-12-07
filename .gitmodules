@@ -1,0 +1,6 @@
+[submodule "vrm"]
+	path = addons/vrm
+	url = https://github.com/V-Sekai/godot-vrm
+[submodule "Godot-MToon-Shader"]
+	path = addons/Godot-MToon-Shader
+	url = https://github.com/V-Sekai/Godot-MToon-Shader
