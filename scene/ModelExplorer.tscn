@@ -66,22 +66,17 @@ offset_right = 300.0
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/InfoPanel"]
-offset_right = 300.0
-offset_bottom = 1800.0
+layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="Row" type="VBoxContainer" parent="Node/InfoPanel/MarginContainer"]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 292.0
-offset_bottom = 1792.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Node/InfoPanel/MarginContainer/Row"]
-offset_right = 284.0
-offset_bottom = 29.0
+layout_mode = 2
 text = "Information"
 label_settings = SubResource("LabelSettings_8uw33")
 
@@ -101,24 +96,19 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/LoadingPanel"]
-offset_right = 400.0
-offset_bottom = 262.0
+layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Node/LoadingPanel/MarginContainer"]
-offset_left = 100.0
-offset_top = 16.0
-offset_right = 300.0
-offset_bottom = 250.0
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Node/LoadingPanel/MarginContainer/VBoxContainer"]
-offset_right = 200.0
-offset_bottom = 200.0
+layout_mode = 2
 value = 20.0
 fill_mode = 4
 texture_under = ExtResource("5_ki67k")
@@ -126,10 +116,7 @@ texture_progress = ExtResource("6_18sj1")
 script = ExtResource("7_mw4jw")
 
 [node name="Label" type="Label" parent="Node/LoadingPanel/MarginContainer/VBoxContainer"]
-offset_left = 62.0
-offset_top = 204.0
-offset_right = 137.0
-offset_bottom = 230.0
+layout_mode = 2
 size_flags_horizontal = 4
 text = "Loading..."
 
@@ -143,41 +130,30 @@ offset_bottom = 93.0
 grow_horizontal = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/ToolPanel"]
-offset_right = 143.0
-offset_bottom = 93.0
+layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Row" type="VBoxContainer" parent="Node/ToolPanel/MarginContainer"]
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 181.0
-offset_bottom = 166.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Node/ToolPanel/MarginContainer/Row"]
-offset_right = 111.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Tool"
 
 [node name="CbWireframe" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-offset_top = 30.0
-offset_right = 140.0
-offset_bottom = 61.0
+layout_mode = 2
 text = "Wireframe (W)"
 
 [node name="CbExplode" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-offset_top = 65.0
-offset_right = 140.0
-offset_bottom = 96.0
+layout_mode = 2
 tooltip_text = "Move all meshes away from the center to easily check how may meshes are there"
 text = "Explode (E)"
 
 [node name="CbHideGrid" type="CheckBox" parent="Node/ToolPanel/MarginContainer/Row"]
-offset_top = 100.0
-offset_right = 140.0
-offset_bottom = 131.0
+layout_mode = 2
 text = "Hide Grid (G)"
 
 [node name="MessagePanel" type="PanelContainer" parent="Node"]
@@ -195,18 +171,13 @@ grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/MessagePanel"]
 layout_mode = 2
-offset_right = 339.0
-offset_bottom = 62.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Label" type="Label" parent="Node/MessagePanel/MarginContainer"]
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 323.0
-offset_bottom = 46.0
+layout_mode = 2
 text = "Drop gltf/glb file into this window"
 
 [connection signal="gltf_is_loaded" from="." to="Node" method="_on_root_gltf_is_loaded"]
