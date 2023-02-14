@@ -1,6 +1,6 @@
 # Model explorer
 
-A gltf model viewer made by Godot 4
+A gltf model viewer made for Godot 4
 
 ![screenshot](https://raw.githubusercontent.com/V-Sekai-fire/VSK_model_explorer/v-sekai/screenshots/Screenshot.png)
 
