@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dvpfndtt8epxg"]
+[gd_scene load_steps=15 format=3 uid="uid://dvpfndtt8epxg"]
 
 [ext_resource type="Script" path="res://scene/ModelExplorer.gd" id="1_nw81i"]
 [ext_resource type="Shader" path="res://shader/Grid.gdshader" id="2_c212q"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://scene/UIController.gd" id="4_3e4pv"]
 [ext_resource type="Texture2D" uid="uid://dngs678q2vwu2" path="res://texture/T_ProgressCircle_BG.png" id="5_ki67k"]
 [ext_resource type="Texture2D" uid="uid://ciy2pu22x0j1w" path="res://texture/T_ProgressCircle_FG.png" id="6_18sj1"]
-[ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://scene/Theme.theme" id="6_ee8my"]
+[ext_resource type="Theme" path="res://scene/Theme.theme" id="6_ee8my"]
 [ext_resource type="Script" path="res://scene/ProgressIndicator.gd" id="7_mw4jw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_je8ca"]
