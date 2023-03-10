@@ -60,7 +60,7 @@ func _input(event):
 			self.scale_object_local(Vector3.ONE * (1/ZOOM_FACTOR))
 
 
-func _on_root_gltf_is_loaded(success, gltf):
+func _on_root_gltf_is_loaded(_success, _gltf):
 	# Reset camera local scale
 	scale = Vector3.ONE
 	rotation.y = 0

@@ -82,8 +82,8 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 		var meshParent:TreeItem = meshInfoTree.create_item()
 
 		# Mesh section
-		var material_array: Array[Material]
-		var texture_array: Array[Variant]
+		var material_array: Array[Material] = []
+		var texture_array: Array[Variant] = []
 
 		var add_texture_to_array = func(texture):
 			if texture != null and not texture_array.has(texture):
@@ -245,7 +245,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	for animationPlayer in animationPlayers:
 		if animationPlayer == null:
 			continue
-		var animationArray:Array[Array]
+		var animationArray:Array[Array] = []
 
 		var animLibList:Array[StringName] = animationPlayer.get_animation_library_list()
 		for animLibName in animLibList:
@@ -359,7 +359,7 @@ func _on_animation_item_double_clicked(tree:Tree):
 		player.queue(anim)
 
 
-func _on_animation_item_finished(animation_name : StringName, player : AnimationPlayer, players : Array[Node]):
+func _on_animation_item_finished(animation_name : StringName, player : AnimationPlayer, _players : Array[Node]):
 	for animationPlayer in animationPlayers:
 		if animationPlayer == null:
 			continue
@@ -396,7 +396,7 @@ func _on_cb_hide_grid_toggled(button_pressed):
 	if Grid != null:
 		Grid.visible = not button_pressed
 
-func _on_mesh_clicked(camera: Node, event: InputEvent, position: Vector3, normal: Vector3, shape_idx: int, mesh: MeshInstance3D):
+func _on_mesh_clicked(_camera: Node, event: InputEvent, position: Vector3, _normal: Vector3, _shape_idx: int, mesh: MeshInstance3D):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if meshViewer != null:
 			meshViewer.queue_free()
