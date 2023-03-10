@@ -10,24 +10,20 @@ offset_bottom = 1245.0
 script = ExtResource("1_ph3c1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
 offset_right = 373.0
 offset_bottom = 473.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
 offset_right = 373.0
 offset_bottom = 36.0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
 offset_right = 337.0
 offset_bottom = 36.0
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/MarginContainer"]
-layout_mode = 2
 offset_left = 8.0
 offset_top = 3.0
 offset_right = 337.0
@@ -36,7 +32,6 @@ text = "Material name"
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
 offset_left = 341.0
 offset_right = 373.0
 offset_bottom = 36.0

@@ -12,13 +12,16 @@ extends Node
 @onready var CbExplode: CheckBox = $ToolPanel/MarginContainer/Row/CbExplode
 @onready var CbHideGrid: CheckBox = $ToolPanel/MarginContainer/Row/CbHideGrid
 
+var animationPlayers: Array[Node]
+
 const TextureViewer = preload("res://scene/TextureViewer.tscn")
 var texViewer
 
 const MaterialViewer = preload("res://scene/MaterialViewer.tscn")
 var matViewer
 
-var animationPlayers: Array[Node]
+const MeshInfoViewer = preload("res://scene/MeshInfo.tscn")
+var meshViewer
 
 const DYNAMIC_CONTROL_GROUP = "dynamic control"
 
@@ -48,6 +51,7 @@ func _on_root_gltf_start_to_load():
 		ctl.queue_free()
 
 func _on_root_gltf_is_loaded(success, gltf : Node):
+	Input.action_press("close_popup")
 	if not success:
 		MsgLabel.text = "Failed to load model..."
 		MsgPanel.visible = true
@@ -282,6 +286,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 		mesh.create_convex_collision()
 		
 		var staticBody:StaticBody3D = mesh.get_node("%s_col" % mesh.name)
+		staticBody.input_event.connect(_on_mesh_clicked.bind(mesh))
 		staticBody.mouse_entered.connect(_on_mesh_mouse_entered.bind(mesh))
 		staticBody.mouse_exited.connect(_on_mesh_mouse_exited.bind(mesh))
 
@@ -390,6 +395,26 @@ func _on_cb_explode_toggled(button_pressed):
 func _on_cb_hide_grid_toggled(button_pressed):
 	if Grid != null:
 		Grid.visible = not button_pressed
+
+func _on_mesh_clicked(camera: Node, event: InputEvent, position: Vector3, normal: Vector3, shape_idx: int, mesh: MeshInstance3D):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if meshViewer != null:
+			meshViewer.queue_free()
+		
+		meshViewer = MeshInfoViewer.instantiate()
+		meshViewer.set_mesh(mesh)
+		
+		var pos = event.position + Vector2(60, -100)
+		# Prevent window out of screen
+		var viewportSize = get_viewport().size / 2
+		if pos.x > viewportSize.x:
+			pos.x = viewportSize.x
+		if pos.y < 0:
+			pos.y = 0
+			
+		meshViewer.position = pos
+
+		add_child(meshViewer)
 
 func _on_mesh_mouse_entered(mesh: MeshInstance3D):
 	MeshExt.mesh_create_outline(mesh)
