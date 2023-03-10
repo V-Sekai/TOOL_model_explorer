@@ -2,8 +2,6 @@
 
 A gltf model viewer made for Godot 4
 
-![screenshot](https://raw.githubusercontent.com/V-Sekai-fire/VSK_model_explorer/v-sekai/screenshots/Screenshot.png)
-
 ## Release notes
 
 `.vrm`, `.glb`, and `.gltf` files can be viewed now.
