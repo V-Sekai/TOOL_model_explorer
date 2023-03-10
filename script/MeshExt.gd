@@ -1,5 +1,11 @@
 extends Node
 
+var _outline_material: ShaderMaterial
+
+func _ready():
+	_outline_material = ShaderMaterial.new()
+	_outline_material.shader = preload("res://shader/Outlint.gdshader")
+
 # Created and optimized by https://github.com/fire
 # Huge thank!
 func draw_uv_texture(mesh: Mesh) -> PackedVector2Array:
@@ -27,18 +33,25 @@ func face_count(mesh: Mesh) -> int:
 
 const OUTLINE = "Outline"
 
-func mesh_create_outline(mesh: MeshInstance3D):
-	var outlineMesh = mesh.mesh.create_outline(mesh.mesh.get_aabb().size.length() / 300.0)
-	var mat = StandardMaterial3D.new()
-	mat.emission = Color.YELLOW
-	mat.emission_enabled = true
-	
-	var instance = MeshInstance3D.new()
-	instance.name = OUTLINE
-	instance.mesh = outlineMesh
-	instance.material_overlay = mat
+func mesh_clear_all_outline():
+	var nodes = get_tree().get_nodes_in_group(OUTLINE)
+	for n in nodes:
+		n.queue_free()
 
-	mesh.add_child(instance)
+func mesh_create_outline(mesh: MeshInstance3D):
+	var outline = mesh.get_node(OUTLINE)
+	
+	if outline == null:
+		var outlineMesh = mesh.mesh.create_outline(mesh.mesh.get_aabb().size.length() / 300.0)
+
+		var instance = MeshInstance3D.new()
+		instance.name = OUTLINE
+		instance.mesh = outlineMesh
+		instance.material_overlay = _outline_material
+		
+		instance.add_to_group(OUTLINE)
+
+		mesh.add_child(instance)
 	
 func mesh_remove_outline(mesh: MeshInstance3D):
 	var outline = mesh.get_node(OUTLINE)

@@ -47,7 +47,7 @@ func _load_gltf(file:String):
 		gltf = gltf_doc.generate_scene(gltf_state)
 		gltf.add_to_group(GlobalSignal.GLTF_GROUP)
 		call_deferred("add_child", gltf)
-		
+	
 	gltf_is_loaded.emit(success, gltf)
 
 func _exit_tree():
