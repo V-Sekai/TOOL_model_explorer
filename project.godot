@@ -33,6 +33,10 @@ window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/vrm/plugin.cfg")
+
 [gui]
 
 theme/default_theme_scale=1.2
@@ -64,6 +68,7 @@ toggle_grid={
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=4
 scaling_3d/scale=0.8
 anti_aliasing/quality/msaa_3d=2
