@@ -29,6 +29,6 @@ runs:
     - name: Checkout godot engine repo
       uses: actions/checkout@v3
       with:
-        repository: godotengine/godot
+        repository: v-sekai/godot
         path: godot
-        ref: 4.0-stable
+        ref: aa346037f227524a6086b2f85618e008cba19b80
