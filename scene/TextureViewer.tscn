@@ -20,46 +20,27 @@ script = ExtResource("1_hbv6i")
 
 [node name="Row" type="VBoxContainer" parent="."]
 layout_mode = 2
-offset_right = 800.0
-offset_bottom = 800.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Row"]
 layout_mode = 2
-offset_right = 800.0
-offset_bottom = 36.0
-grow_horizontal = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Row/HBoxContainer"]
 layout_mode = 2
-offset_right = 764.0
-offset_bottom = 36.0
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
 
 [node name="Label" type="Label" parent="Row/HBoxContainer/MarginContainer"]
 layout_mode = 2
-offset_left = 8.0
-offset_top = 3.0
-offset_right = 764.0
-offset_bottom = 33.0
 size_flags_horizontal = 3
 text = "Texture viewer"
 
 [node name="Button" type="Button" parent="Row/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-offset_left = 768.0
-offset_right = 800.0
-offset_bottom = 36.0
 text = "X"
 
 [node name="Panel" type="Panel" parent="Row"]
 layout_mode = 2
-offset_top = 40.0
-offset_right = 800.0
-offset_bottom = 800.0
 size_flags_vertical = 3
 
 [node name="Canvas" type="Control" parent="Row/Panel"]

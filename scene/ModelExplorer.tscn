@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scene/UIController.gd" id="4_3e4pv"]
 [ext_resource type="Texture2D" uid="uid://dngs678q2vwu2" path="res://texture/T_ProgressCircle_BG.png" id="5_ki67k"]
 [ext_resource type="Texture2D" uid="uid://ciy2pu22x0j1w" path="res://texture/T_ProgressCircle_FG.png" id="6_18sj1"]
+[ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://scene/Theme.theme" id="6_ee8my"]
 [ext_resource type="Script" path="res://scene/ProgressIndicator.gd" id="7_mw4jw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_je8ca"]
@@ -64,6 +65,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 300.0
 grow_vertical = 2
+theme = ExtResource("6_ee8my")
 
 [node name="MarginContainer" type="MarginContainer" parent="Node/InfoPanel"]
 layout_mode = 2
