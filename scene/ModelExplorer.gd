@@ -36,7 +36,7 @@ func _load_gltf(file:String):
 	var gltf_state: GLTFState = GLTFState.new()
 	gltf_state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED
 	if file.ends_with("vrm"):
-		gltf_doc.register_gltf_document_extension(gltf_vrm_extension, true)
+		GLTFDocument.register_gltf_document_extension(gltf_vrm_extension, true)
 	
 	var err = gltf_doc.append_from_file(file, gltf_state)
 	
@@ -52,4 +52,4 @@ func _load_gltf(file:String):
 	gltf_is_loaded.emit(success, gltf)
 
 func _exit_tree():
-	gltf_doc.unregister_gltf_document_extension(gltf_vrm_extension)
+	GLTFDocument.unregister_gltf_document_extension(gltf_vrm_extension)
