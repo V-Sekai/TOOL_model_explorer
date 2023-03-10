@@ -1,9 +1,11 @@
 extends PanelContainer
 
-@onready var InfoTree:Tree = $VBoxContainer/Tree
 @onready var CloseButton:Button = $VBoxContainer/HBoxContainer/Button
 @onready var TitleLabel:Label = $VBoxContainer/HBoxContainer/MarginContainer/Label
 @onready var LbFaceCount:Label = $VBoxContainer/MarginContainer/VBoxContainer/LbFaceCount
+@onready var LbPos:Label = $VBoxContainer/MarginContainer/VBoxContainer/LbPos
+@onready var LbSize:Label = $VBoxContainer/MarginContainer/VBoxContainer/LbSize
+@onready var LbBBox:Label = $VBoxContainer/MarginContainer/VBoxContainer/LbBBox
 @onready var BtnViewUV:Button = $VBoxContainer/MarginContainer/VBoxContainer/BtnViewUV
 
 var _mesh:MeshInstance3D
@@ -22,6 +24,12 @@ func _ready():
 		
 	TitleLabel.text = shortName
 	LbFaceCount.text = "Face count: %d" % MeshExt.face_count(_mesh.mesh)
+	
+	LbPos.text = "Pos: %s" % _mesh.position
+	
+	var aabbSize = _mesh.mesh.get_aabb().size
+	LbBBox.text = "BBox: [%.2f %.2f %.2f]" % [aabbSize.x, aabbSize.y, aabbSize.z]
+	LbSize.text = "Size: %.2f" % aabbSize.length()
 
 func _on_close_button_pressed():
 	queue_free()
