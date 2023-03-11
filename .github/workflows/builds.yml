@@ -115,36 +115,35 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_linux
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.pck --path .
-
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/vsk_model_explorer_${{ matrix.deploy-platform }}.pck --path .
       - name: Prepare artifacts
         if: ${{ matrix.deploy && matrix.deploy-platform == 'windows' }}
         run: |
-          rm -rf ${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}
-          export TARGET=${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}
+          rm -rf vsk_model_explorer_${{ matrix.deploy-platform }}
+          export TARGET=vsk_model_explorer_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.exe
-          cp -rf ${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.pck $TARGET/${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.pck
+          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.exe
+          cp -rf vsk_model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
 
       - name: Prepare artifacts
         if: ${{ matrix.deploy && matrix.deploy-platform != 'windows' }}
         run: |
-          rm -rf ${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}
-          export TARGET=${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}
+          rm -rf vsk_model_explorer_${{ matrix.deploy-platform }}
+          export TARGET=vsk_model_explorer_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}
-          cp -rf ${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.pck $TARGET/${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}.pck
+          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}
+          cp -rf vsk_model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.pck
         shell: bash
 
       - name: Upload Godot Artifact Export
         if: ${{ matrix.deploy }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.EXPORT_NAME}}${{ matrix.deploy-platform }}_x86_64
+          name: vsk_model_explorer_${{ matrix.deploy-platform }}_x86_64
           path: |
-            ${{env.EXPORT_NAME}}{{ matrix.deploy-platform }}
+            vsk_model_explorer_${{ matrix.deploy-platform }}
 
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
