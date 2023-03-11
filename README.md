@@ -20,4 +20,4 @@ A gltf model viewer made for Godot 4
 
 ## nightly.link
 
-Links are pending.
+Builds are on [nightly.link](https://nightly.link/V-Sekai/VSK_model_explorer/workflows/builds/v-sekai).
