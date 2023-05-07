@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dvpfndtt8epxg"]
+[gd_scene load_steps=16 format=3 uid="uid://dvpfndtt8epxg"]
 
 [ext_resource type="Script" path="res://scene/ModelExplorer.gd" id="1_nw81i"]
 [ext_resource type="Shader" path="res://shader/Grid.gdshader" id="2_c212q"]
@@ -22,6 +22,9 @@ sky_material = SubResource("ProceduralSkyMaterial_je8ca")
 background_mode = 2
 sky = SubResource("Sky_h8kkh")
 
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_4a23n"]
+auto_exposure_enabled = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k3w7f"]
 render_priority = 0
 shader = ExtResource("2_c212q")
@@ -38,6 +41,7 @@ script = ExtResource("1_nw81i")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5wpq0")
+camera_attributes = SubResource("CameraAttributesPhysical_4a23n")
 
 [node name="GizmoPlane" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_6snqc")
@@ -50,6 +54,7 @@ UiNode = NodePath("../Node/InfoPanel")
 
 [node name="Camera3D" type="Camera3D" parent="CamController/CamRotHelper"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.81462)
+fov = 37.8493
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CamController/CamRotHelper/Camera3D"]
 transform = Transform3D(0.85798, -0.214782, 0.466625, -0.00966859, 0.901478, 0.432717, -0.513591, -0.375774, 0.771374, 4.30535, 3.06095, 0)

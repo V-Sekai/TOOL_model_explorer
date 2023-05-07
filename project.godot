@@ -14,8 +14,6 @@ config/name="ModelExplorer"
 run/main_scene="res://scene/ModelExplorer.tscn"
 config/features=PackedStringArray("4.0", "Double Precision", "Forward Plus")
 boot_splash/show_image=false
-boot_splash/fullsize=false
-boot_splash/use_filter=false
 config/icon="res://icon.svg"
 config/macos_native_icon="res://resource/icon/app_icon.icns"
 config/windows_native_icon="res://resource/icon/app_icon.ico"
@@ -29,9 +27,6 @@ MeshExt="*res://script/MeshExt.gd"
 
 window/size/viewport_width=2880
 window/size/viewport_height=1800
-window/size/mode=2
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 
 [editor_plugins]
 
@@ -69,7 +64,9 @@ toggle_grid={
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
+lights_and_shadows/use_physical_light_units=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=4
 scaling_3d/scale=0.8
+anti_aliasing/quality/msaa_2d=2
 anti_aliasing/quality/msaa_3d=2
 anti_aliasing/quality/screen_space_aa=1
