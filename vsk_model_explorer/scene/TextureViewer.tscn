@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://gd52rvrq5aam"]
+
+[ext_resource type="Script" path="res://vsk_model_explorer/scene/TextureViewer.gd" id="1_hbv6i"]
+[ext_resource type="Script" path="res://vsk_model_explorer/scene/CustomCanvas.gd" id="2_enmbk"]
+
+
+[node name="TextureViewer" type="PanelContainer"]
+custom_minimum_size = Vector2(800, 800)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hbv6i")
+
+[node name="Row" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Row"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Row/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+
+[node name="Label" type="Label" parent="Row/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Texture viewer"
+
+[node name="Button" type="Button" parent="Row/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+text = "X"
+
+[node name="Panel" type="Panel" parent="Row"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Canvas" type="Control" parent="Row/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_enmbk")

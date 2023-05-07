@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7nsvwvob4qlj"
-path="res://.godot/imported/app_icon.png-349398737f1cbad85a950510a2422420.ctex"
+uid="uid://dngs678q2vwu2"
+path="res://.godot/imported/T_ProgressCircle_BG.png-42d424a463665f7f4f177a489585f6c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resource/icon/app_icon.png"
-dest_files=["res://.godot/imported/app_icon.png-349398737f1cbad85a950510a2422420.ctex"]
+source_file="res://vsk_model_explorer/texture/T_ProgressCircle_BG.png"
+dest_files=["res://.godot/imported/T_ProgressCircle_BG.png-42d424a463665f7f4f177a489585f6c3.ctex"]
 
 [params]
 

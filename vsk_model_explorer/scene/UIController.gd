@@ -14,13 +14,13 @@ extends Node
 
 var animationPlayers: Array[Node]
 
-const TextureViewer = preload("res://scene/TextureViewer.tscn")
+const TextureViewer = preload("res://vsk_model_explorer/scene/TextureViewer.tscn")
 var texViewer
 
-const MaterialViewer = preload("res://scene/MaterialViewer.tscn")
+const MaterialViewer = preload("res://vsk_model_explorer/scene/MaterialViewer.tscn")
 var matViewer
 
-const MeshInfoViewer = preload("res://scene/MeshInfo.tscn")
+const MeshInfoViewer = preload("res://vsk_model_explorer/scene/MeshInfo.tscn")
 var meshViewer
 
 const DYNAMIC_CONTROL_GROUP = "dynamic control"

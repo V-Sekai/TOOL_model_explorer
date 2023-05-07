@@ -3,7 +3,7 @@ extends Node3D
 signal gltf_start_to_load
 signal gltf_is_loaded(success:bool, gltf:Node)
 
-const Worker = preload("res://script/Worker.gd")
+const Worker = preload("res://vsk_model_explorer/script/Worker.gd")
 var worker: Worker
 	
 const gltf_vrm_extension_const = preload("res://addons/vrm/vrm_extension.gd")

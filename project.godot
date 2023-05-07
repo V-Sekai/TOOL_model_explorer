@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ModelExplorer"
-run/main_scene="res://scene/ModelExplorer.tscn"
+run/main_scene="res://vsk_model_explorer/scene/ModelExplorer.tscn"
 config/features=PackedStringArray("4.0", "Double Precision", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
@@ -20,8 +20,8 @@ config/windows_native_icon="res://resource/icon/app_icon.ico"
 
 [autoload]
 
-GlobalSignal="*res://script/GlobalSignal.gd"
-MeshExt="*res://script/MeshExt.gd"
+GlobalSignal="*res://vsk_model_explorer/script/GlobalSignal.gd"
+MeshExt="*res://vsk_model_explorer/script/MeshExt.gd"
 
 [display]
 
