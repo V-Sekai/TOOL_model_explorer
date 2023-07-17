@@ -145,7 +145,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 							var parameter = (mat as ShaderMaterial).get_shader_parameter(parameter_name)
 							add_texture_to_array.call(parameter)
 
-		Row.add_child(meshInfoTree)
+		Row.add_child.call_deferred(meshInfoTree)
 
 		# Material section
 		if material_array.size() > 0:
@@ -202,7 +202,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 							img.fill(parameter)
 							matItem.set_icon(0, ImageTexture.create_from_image(img))
 
-			Row.add_child(materialInfoTree)
+			Row.add_child.call_deferred(materialInfoTree)
 
 		# Texture section
 		if texture_array.size() > 0:
@@ -240,7 +240,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 					
 
 
-			Row.add_child(textureInfoTree)
+			Row.add_child.call_deferred(textureInfoTree)
 
 	for animationPlayer in animationPlayers:
 		if animationPlayer == null:
@@ -278,7 +278,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 				animItem.set_text(0, anim[0])
 				animItem.set_metadata(1, anim)
 
-			Row.add_child(animationTree)
+			Row.add_child.call_deferred(animationTree)
 
 	# Create convex collision
 	for mesh in meshes:
@@ -375,7 +375,7 @@ func _show_texture_viewer(tex):
 
 	texViewer = TextureViewer.instantiate()
 	texViewer.set_draw_data(tex)
-	add_child(texViewer)
+	add_child.call_deferred(texViewer)
 
 
 func _on_cb_explode_toggled(button_pressed):
