@@ -56,7 +56,7 @@ func mesh_create_outline(mesh: MeshInstance3D):
 		
 		instance.add_to_group(OUTLINE)
 
-		mesh.add_child(instance)
+		mesh.add_child.call_deferred(instance)
 	
 func mesh_remove_outline(mesh: MeshInstance3D):
 	if not mesh.has_node(OUTLINE):

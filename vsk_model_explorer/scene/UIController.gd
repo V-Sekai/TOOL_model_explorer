@@ -338,7 +338,7 @@ func _on_material_item_double_clicked(tree:Tree):
 
 		matViewer = MaterialViewer.instantiate()
 		matViewer.set_material_view(mat)
-		add_child(matViewer)
+		add_child.call_deferred(matViewer)
 
 func _on_texture_double_clicked(tree:Tree):
 	var texItem:TreeItem = tree.get_selected()
@@ -414,7 +414,7 @@ func _on_mesh_clicked(_camera: Node, event: InputEvent, position: Vector3, _norm
 			
 		meshViewer.position = pos
 
-		add_child(meshViewer)
+		add_child.call_deferred(meshViewer)
 
 func _on_mesh_mouse_entered(mesh: MeshInstance3D):
 	MeshExt.mesh_create_outline(mesh)

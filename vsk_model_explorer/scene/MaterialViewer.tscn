@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://vsk_model_explorer/scene/MaterialViewer.gd" id="1_ph3c1"]
 [ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://vsk_model_explorer/scene/Theme.theme" id="1_wqut7"]
 
-
 [node name="MaterialViewer" type="PanelContainer"]
 offset_left = 314.0
 offset_top = 772.0
@@ -13,38 +12,27 @@ theme = ExtResource("1_wqut7")
 script = ExtResource("1_ph3c1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_right = 373.0
-offset_bottom = 473.0
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_right = 373.0
-offset_bottom = 36.0
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
-offset_right = 337.0
-offset_bottom = 36.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/MarginContainer"]
-offset_left = 8.0
-offset_top = 3.0
-offset_right = 337.0
-offset_bottom = 33.0
+layout_mode = 2
 text = "Material name"
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
-offset_left = 341.0
-offset_right = 373.0
-offset_bottom = 36.0
+layout_mode = 2
 text = "X"
 
 [node name="Tree" type="Tree" parent="VBoxContainer"]
 layout_mode = 2
-offset_top = 40.0
-offset_right = 373.0
-offset_bottom = 473.0
 size_flags_vertical = 3
 columns = 2
 hide_folding = true
