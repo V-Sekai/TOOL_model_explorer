@@ -1,5 +1,7 @@
 # Model explorer
 
+**Work in progress as of 2023-07-31**
+
 A gltf model viewer made for Godot 4
 
 ## Release notes
@@ -17,7 +19,3 @@ A gltf model viewer made for Godot 4
 - Show animations inside
   - Quick play animation
 - Toggle wireframe mode
-
-## nightly.link
-
-Builds are on [nightly.link](https://nightly.link/V-Sekai/VSK_model_explorer/workflows/builds/v-sekai).
