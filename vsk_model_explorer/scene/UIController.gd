@@ -286,6 +286,8 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 		mesh.create_convex_collision()
 		
 		var staticBody:StaticBody3D = mesh.get_node("%s_col" % mesh.name)
+		if not staticBody:
+			continue
 		staticBody.input_event.connect(_on_mesh_clicked.bind(mesh))
 		staticBody.mouse_entered.connect(_on_mesh_mouse_entered.bind(mesh))
 		staticBody.mouse_exited.connect(_on_mesh_mouse_exited.bind(mesh))
