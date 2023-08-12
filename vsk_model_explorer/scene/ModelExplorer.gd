@@ -35,21 +35,29 @@ func _on_file_dropped(files:PackedStringArray):
 func _load_gltf(file:String):
 	var gltf_state: GLTFState = GLTFState.new()
 	gltf_state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED
+	var err = ERR_FILE_CANT_OPEN
 	if file.ends_with("vrm"):
 		GLTFDocument.register_gltf_document_extension(gltf_vrm_extension, true)
+
+	err = gltf_doc.append_from_file(file, gltf_state)
 	
-	var err = gltf_doc.append_from_file(file, gltf_state)
-	
-	var success = false
 	var gltf:Node = null
 	
 	if err == OK:
-		success = true
 		gltf = gltf_doc.generate_scene(gltf_state)
 		gltf.add_to_group(GlobalSignal.GLTF_GROUP)
 		add_child.call_deferred(gltf)
-	
-	gltf_is_loaded.emit(success, gltf)
+		_emit_gltf_load.call_deferred(gltf)
+	else:
+		_emit_gltf_load_failed.call_deferred()
+
+func _emit_gltf_load(gltf) -> void:
+	gltf_is_loaded.emit(true, gltf)
+
+
+func _emit_gltf_load_failed() -> void:
+	gltf_is_loaded.emit(false, null)
+
 
 func _exit_tree():
 	GLTFDocument.unregister_gltf_document_extension(gltf_vrm_extension)
