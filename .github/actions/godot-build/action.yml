@@ -34,6 +34,7 @@ runs:
   steps:
     - name: Install llvm-mingw
       shell: bash
+      if: runner.os != 'macOS'
       run: |
         curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20230130/llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
         tar -xf llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
