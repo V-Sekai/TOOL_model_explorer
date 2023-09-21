@@ -63,9 +63,10 @@ attributes = SubResource("CameraAttributesPhysical_6umus")
 transform = Transform3D(0.85798, -0.214782, 0.466625, -0.00966859, 0.901478, 0.432717, -0.513591, -0.375774, 0.771374, 4.30535, 3.06095, 0)
 shadow_enabled = true
 
-[node name="Node" type="Node" parent="." node_paths=PackedStringArray("Grid")]
+[node name="Node" type="Node" parent="."]
 script = ExtResource("4_3e4pv")
-Grid = NodePath("../GizmoPlane")
+Grid = Object(MeshInstance3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"layers":1,"sorting_offset":0.0,"sorting_use_aabb_center":true,"material_override":null,"material_overlay":null,"transparency":0.0,"cast_shadow":1,"extra_cull_margin":0.0,"custom_aabb":AABB(0, 0, 0, 0, 0, 0),"lod_bias":1.0,"ignore_occlusion_culling":false,"gi_mode":1,"gi_lightmap_scale":0,"visibility_range_begin":0.0,"visibility_range_begin_margin":0.0,"visibility_range_end":0.0,"visibility_range_end_margin":0.0,"visibility_range_fade_mode":0,"mesh":SubResource("PlaneMesh_6snqc"),"skin":null,"skeleton":NodePath(".."),"surface_material_override/0":null,"script":null)
+
 
 [node name="InfoPanel" type="PanelContainer" parent="Node"]
 visible = false

@@ -367,9 +367,10 @@ func _on_animation_item_finished(animation_name : StringName, player : Animation
 			continue
 		for animation in (animationPlayer as AnimationPlayer).get_animation_list():
 			animationPlayer.assigned_animation = animation
-			animationPlayer.seek(0)
+			animationPlayer.seek(0, true)
 			animationPlayer.advance(0)
 	player.assigned_animation = animation_name
+
 
 func _show_texture_viewer(tex):
 	if texViewer != null:
