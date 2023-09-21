@@ -1,7 +1,7 @@
 # Model explorer
 
 <div style="width: 50%; margin: auto; overflow: hidden;">
-    <img src=".github\Screenshot 2023-09-21 105018.png" alt="Model Explorer Image" style="width: 200%; clip-path: inset(0 0 50% 0);">
+    <img src=".github/Screenshot 2023-09-21 105018.png" alt="Model Explorer Image">
 </div>
 
 **Work in progress as of 2023-07-31**
