@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dvpfndtt8epxg"]
+[gd_scene load_steps=17 format=3 uid="uid://dvpfndtt8epxg"]
 
 [ext_resource type="Script" path="res://vsk_model_explorer/scene/ModelExplorer.gd" id="1_nw81i"]
 [ext_resource type="Shader" path="res://vsk_model_explorer/shader/Grid.gdshader" id="2_c212q"]
@@ -33,6 +33,9 @@ shader = ExtResource("2_c212q")
 material = SubResource("ShaderMaterial_k3w7f")
 size = Vector2(10000, 10000)
 
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_6umus"]
+auto_exposure_enabled = true
+
 [sub_resource type="LabelSettings" id="LabelSettings_8uw33"]
 font_size = 18
 
@@ -54,7 +57,7 @@ UiNode = NodePath("../Node/InfoPanel")
 
 [node name="Camera3D" type="Camera3D" parent="CamController/CamRotHelper"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.81462)
-fov = 37.8493
+attributes = SubResource("CameraAttributesPhysical_6umus")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="CamController/CamRotHelper/Camera3D"]
 transform = Transform3D(0.85798, -0.214782, 0.466625, -0.00966859, 0.901478, 0.432717, -0.513591, -0.375774, 0.771374, 4.30535, 3.06095, 0)
