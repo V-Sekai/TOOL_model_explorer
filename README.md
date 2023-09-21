@@ -21,3 +21,9 @@ V-Sekai Model Explorer is a 3D model viewer built with Godot 4. It supports vari
 - Show animations inside
   - Quick play animation
 - Toggle wireframe mode
+
+## Special Thanks to AllenDang
+
+Thanks to AllenDang for creating the original version.
+
+https://github.com/AllenDang/model_explorer_godot4
