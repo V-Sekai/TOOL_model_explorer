@@ -34,7 +34,7 @@ func _on_file_dropped(files:PackedStringArray):
 
 func _load_gltf(file:String):
 	var gltf_state: GLTFState = GLTFState.new()
-	gltf_state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED
+	gltf_state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_BASISU
 	var err = ERR_FILE_CANT_OPEN
 	if file.ends_with("vrm"):
 		GLTFDocument.register_gltf_document_extension(gltf_vrm_extension, true)
