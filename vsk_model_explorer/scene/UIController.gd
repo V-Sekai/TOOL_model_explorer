@@ -359,6 +359,22 @@ func _on_animation_item_double_clicked(tree:Tree):
 		if not player.animation_finished.is_connected(callable):
 			player.animation_finished.connect(callable)
 		player.queue(anim)
+	if anim == "RESET":		
+		var animation_players: Array[Node] = owner.find_children("*", "AnimationPlayer")
+		for node in animation_players:
+			if node is AnimationPlayer:
+				node.play("RESET")
+				node.seek(0, true)
+				node.stop()
+		var skeletons: Array[Node] = owner.find_children("*", "Skeleton3D")
+		for node in skeletons:
+			if node is Skeleton3D:
+				node.reset_bone_poses()
+		var mesh_instances: Array[Node] = owner.find_children("*", "MeshInstance3D")
+		for node in mesh_instances:
+			if node.get_mesh() is ArrayMesh:
+				for i in range(node.get_mesh().get_blend_shape_count()):
+					node.set("blend_shapes/" + node.get_mesh().get_blend_shape_name(i), 0)
 
 
 func _on_animation_item_finished(animation_name : StringName, player : AnimationPlayer, _players : Array[Node]):
@@ -366,10 +382,15 @@ func _on_animation_item_finished(animation_name : StringName, player : Animation
 		if animationPlayer == null:
 			continue
 		for animation in (animationPlayer as AnimationPlayer).get_animation_list():
-			animationPlayer.assigned_animation = animation
+			animationPlayer.play("RESET")
 			animationPlayer.seek(0, true)
-			animationPlayer.advance(0)
-	player.assigned_animation = animation_name
+			animationPlayer.stop()
+
+	var mesh_instances: Array[Node] = owner.find_children("*", "MeshInstance3D")
+	for node in mesh_instances:
+		if node is MeshInstance3D and node.get_mesh() is ArrayMesh:
+			for i in range(node.get_mesh().get_blend_shape_count()):
+				node.set("blend_shapes/" + node.get_mesh().get_blend_shape_name(i), 0)
 
 
 func _show_texture_viewer(tex):
