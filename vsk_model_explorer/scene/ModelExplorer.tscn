@@ -24,6 +24,7 @@ sky = SubResource("Sky_h8kkh")
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_4a23n"]
 auto_exposure_enabled = true
+auto_exposure_min_exposure_value = -4.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k3w7f"]
 render_priority = 0
