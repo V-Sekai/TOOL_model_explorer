@@ -60,7 +60,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	InfoPanel.visible = true
 	ToolPanel.visible = true
 	LoadingPanel.visible = false
-
+	
 	animationPlayers = gltf.find_children("*", "AnimationPlayer")
 
 	var meshes:Array[Node] = gltf.find_children("*", "MeshInstance3D")
@@ -403,8 +403,10 @@ func _show_texture_viewer(tex):
 
 
 func _on_cb_explode_toggled(button_pressed):
-	var nodes = get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP)
-
+	var nodes = []
+	nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP))
+	nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP))
+	
 	for n in nodes:
 		var meshes:Array[Node] = n.find_children("*", "MeshInstance3D")
 		for m in meshes:
