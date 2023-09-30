@@ -60,7 +60,44 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	InfoPanel.visible = true
 	ToolPanel.visible = true
 	LoadingPanel.visible = false
+	
+	var queue = []
+	queue.append(gltf)
+	var delete_queue = []
 
+	while queue.size() > 0:
+		var node = queue.front()
+		queue.pop_front()
+		var mesh_3d = node as ImporterMeshInstance3D
+
+		if mesh_3d:
+			var mesh_instance_node_3d = MeshInstance3D.new()
+			var mesh = mesh_3d.mesh
+
+			if mesh:
+				var array_mesh = mesh.get_mesh()
+				mesh_instance_node_3d.name = node.name
+				mesh_instance_node_3d.transform = mesh_3d.transform
+				mesh_instance_node_3d.mesh = array_mesh
+				mesh_instance_node_3d.skin = mesh_3d.skin
+				mesh_instance_node_3d.skeleton = mesh_3d.skeleton_path
+				node.replace_by(mesh_instance_node_3d)
+				delete_queue.append(node)
+				node = mesh_instance_node_3d
+			else:
+				mesh_instance_node_3d.queue_free()
+
+		var child_count = node.get_child_count()
+		for i in range(child_count):
+			queue.append(node.get_child(i))
+
+	while delete_queue.size() > 0:
+		var node = delete_queue.front()
+		delete_queue.pop_front()
+		node.queue_free()
+
+	
+	
 	animationPlayers = gltf.find_children("*", "AnimationPlayer")
 
 	var meshes:Array[Node] = gltf.find_children("*", "MeshInstance3D")
@@ -403,8 +440,10 @@ func _show_texture_viewer(tex):
 
 
 func _on_cb_explode_toggled(button_pressed):
-	var nodes = get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP)
-
+	var nodes = []
+	nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP))
+	nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP))
+	
 	for n in nodes:
 		var meshes:Array[Node] = n.find_children("*", "MeshInstance3D")
 		for m in meshes:

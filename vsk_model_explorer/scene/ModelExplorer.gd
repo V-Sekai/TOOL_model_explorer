@@ -2,6 +2,9 @@ extends Node3D
 
 signal gltf_start_to_load
 signal gltf_is_loaded(success:bool, gltf:Node)
+signal fbx_start_to_load
+signal fbx_is_loaded(success:bool, fbx:Node)
+
 
 const Worker = preload("res://vsk_model_explorer/script/Worker.gd")
 var worker: Worker
@@ -10,10 +13,12 @@ const gltf_vrm_extension_const = preload("res://addons/vrm/vrm_extension.gd")
 
 var gltf_doc = GLTFDocument.new()
 var gltf_vrm_extension = gltf_vrm_extension_const.new()
-	
+
+var fbx_doc = FBXDocument.new()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_viewport().files_dropped.connect(_on_file_dropped)
+
 
 func _on_file_dropped(files:PackedStringArray):
 	if files.size() == 1:
@@ -22,14 +27,54 @@ func _on_file_dropped(files:PackedStringArray):
 			gltf_start_to_load.emit()
 			
 			# unload previous loaded scene
-			var gltf_nodes = get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP)
-			for n in gltf_nodes:
+			var loaded_nodes = []
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP))
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP))
+			for n in loaded_nodes:
 				n.queue_free()
 
 			worker = Worker.new(Callable(self, "_load_gltf").bind(files[0]))
 			worker.start()
 			
 			gltf_start_to_load.emit()
+		elif ext == "fbx":
+			fbx_start_to_load.emit()
+			
+			# unload previous loaded scene
+			var loaded_nodes = []
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP))
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP))
+			for n in loaded_nodes:
+				n.queue_free()
+
+			var fbx_state: FBXState = FBXState.new()
+			fbx_state.handle_binary_image = FBXState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED
+			var err = ERR_FILE_CANT_OPEN
+
+			err = fbx_doc.append_from_file(files[0], fbx_state)
+			
+			var fbx:Node = null
+			
+			if err == OK:
+				fbx = fbx_doc.generate_scene(fbx_state)
+				if fbx != null:
+					fbx.add_to_group(GlobalSignal.FBX_GROUP)
+					add_child.call_deferred(fbx)
+					_emit_fbx_load.call_deferred(fbx)
+				else:
+					_emit_fbx_load_failed.call_deferred()
+			else:
+				_emit_fbx_load_failed.call_deferred()
+					
+			fbx_start_to_load.emit()
+
+
+func _emit_fbx_load(fbx) -> void:
+	fbx_is_loaded.emit(true, fbx)
+
+
+func _emit_fbx_load_failed() -> void:
+	fbx_is_loaded.emit(false, null)
 
 
 func _load_gltf(file:String):
