@@ -61,6 +61,43 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 	ToolPanel.visible = true
 	LoadingPanel.visible = false
 	
+	var queue = []
+	queue.append(gltf)
+	var delete_queue = []
+
+	while queue.size() > 0:
+		var node = queue.front()
+		queue.pop_front()
+		var mesh_3d = node as ImporterMeshInstance3D
+
+		if mesh_3d:
+			var mesh_instance_node_3d = MeshInstance3D.new()
+			var mesh = mesh_3d.mesh
+
+			if mesh:
+				var array_mesh = mesh.get_mesh()
+				mesh_instance_node_3d.name = node.name
+				mesh_instance_node_3d.transform = mesh_3d.transform
+				mesh_instance_node_3d.mesh = array_mesh
+				mesh_instance_node_3d.skin = mesh_3d.skin
+				mesh_instance_node_3d.skeleton = mesh_3d.skeleton_path
+				node.replace_by(mesh_instance_node_3d)
+				delete_queue.append(node)
+				node = mesh_instance_node_3d
+			else:
+				mesh_instance_node_3d.queue_free()
+
+		var child_count = node.get_child_count()
+		for i in range(child_count):
+			queue.append(node.get_child(i))
+
+	while delete_queue.size() > 0:
+		var node = delete_queue.front()
+		delete_queue.pop_front()
+		node.queue_free()
+
+	
+	
 	animationPlayers = gltf.find_children("*", "AnimationPlayer")
 
 	var meshes:Array[Node] = gltf.find_children("*", "MeshInstance3D")

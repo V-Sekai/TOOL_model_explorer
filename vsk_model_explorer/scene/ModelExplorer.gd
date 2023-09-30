@@ -41,8 +41,10 @@ func _on_file_dropped(files:PackedStringArray):
 			fbx_start_to_load.emit()
 			
 			# unload previous loaded scene
-			var fbx_nodes = get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP)
-			for n in fbx_nodes:
+			var loaded_nodes = []
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.GLTF_GROUP))
+			loaded_nodes.append_array(get_tree().get_nodes_in_group(GlobalSignal.FBX_GROUP))
+			for n in loaded_nodes:
 				n.queue_free()
 
 			var fbx_state: FBXState = FBXState.new()
@@ -53,11 +55,14 @@ func _on_file_dropped(files:PackedStringArray):
 			
 			var fbx:Node = null
 			
-			if err == OK and fbx != null:
+			if err == OK:
 				fbx = fbx_doc.generate_scene(fbx_state)
-				fbx.add_to_group(GlobalSignal.FBX_GROUP)
-				add_child.call_deferred(fbx)
-				_emit_fbx_load.call_deferred(fbx)
+				if fbx != null:
+					fbx.add_to_group(GlobalSignal.FBX_GROUP)
+					add_child.call_deferred(fbx)
+					_emit_fbx_load.call_deferred(fbx)
+				else:
+					_emit_fbx_load_failed.call_deferred()
 			else:
 				_emit_fbx_load_failed.call_deferred()
 					
