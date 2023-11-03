@@ -32,15 +32,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install llvm-mingw
-      shell: bash
-      run: |
-        curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20230130/llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
-        tar -xf llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
-        mv llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64 llvm-mingw
-
     - name: Scons Build
-      shell: sh
+      shell: bash
       env:
         SCONSFLAGS: ${{ inputs.sconsflags }}
         SCONS_CACHE: ${{ inputs.scons-cache }}
@@ -48,28 +41,16 @@ runs:
       run: |
         mkdir -p bin modules/mono/glue 
         cd godot
-        echo "Building with flags:" platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        if [ "${{ inputs.target }}" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
-        export PATH="$PWD/../llvm-mingw/bin:$PATH"
-        scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        cp -r bin/* ../bin
-        cp -r modules/mono/glue/* ../modules/mono/glue
-        ls -l ../bin
-
-    - name: Scons Build
-      if: ${{ matrix.deploy }}
-      shell: sh
-      env:
-        SCONSFLAGS: ${{ inputs.sconsflags }}
-        SCONS_CACHE: ${{ inputs.scons-cache }}
-        SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
-      run: |
-        mkdir -p bin
-        cd godot
-        echo "Building with flags:" platform=${{ inputs.deploy-platform }} target=${{ inputs.deploy-platform-target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        if [ "${{ inputs.target }}" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
-        export PATH="$PWD/../llvm-mingw/bin:$PATH"
-        scons platform=${{ inputs.deploy-platform }} target=${{ inputs.deploy-platform-target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        if [[ "${{ inputs.deploy }}" == "true" ]]; then
+          PLATFORM=${{ inputs.deploy-platform }}
+          TARGET=${{ inputs.deploy-platform-target }}
+        else
+          PLATFORM=${{ inputs.platform }}
+          TARGET=${{ inputs.target }}
+        fi
+        echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
+        scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         cp -r bin/* ../bin        
         cp -r modules/mono/glue/* ../modules/mono/glue
         ls -l ../bin

@@ -7,6 +7,9 @@ inputs:
   python-arch:
     description: The python architecture.
     default: "x64"
+  godot-ref:
+    description: The reference for the Godot engine repository.
+    default: "groups-4.2"
 runs:
   using: "composite"
   steps:
@@ -31,4 +34,4 @@ runs:
       with:
         repository: v-sekai/godot
         path: godot
-        ref: groups-4.2.2023-09-30T155703Z 
+        ref: ${{ inputs.godot-ref }}

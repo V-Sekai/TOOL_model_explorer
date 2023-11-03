@@ -1,78 +1,87 @@
-name: 🐧 Linux Builds
+name: V-Sekai Builds
 
 on:
   push:
     branches:
       - main
+    tags:
+      - '*'
   pull_request:
 
-# Global Settings
 env:
-  # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
+  SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   EM_VERSION: 3.1.18
   EM_CACHE_FOLDER: "emsdk-cache"
-  EXPORT_NAME: model_explorer_
+  OSXCROSS_ROOT: /tmp/
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-deploy
   cancel-in-progress: true
 
 jobs:
-  build-linux:
-    runs-on: "ubuntu-20.04"
+  build:
+    runs-on: "ubuntu-22.04"
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Editor Linux (target=editor,deploy=true,deploy-platform=windows,deploy-platform-target=template_release)
-            cache-name: linux-editor-deploy-windows-template-release
+          - name: linux_editor_win_deploy
+            cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
+            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
             doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.windows.template_release.x86_64.llvm.exe"
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
+            editor-bin-name: godot.windows.editor.double.x86_64.exe
             proj-conv: false
             artifact: true
             platform: linuxbsd
             deploy: true
+            deploy-pdb: true
             deploy-platform: windows
-            deploy-platform-target: template_release
+            export-platform: Windows
+            deploy-platform-target: editor
 
-          - name: Editor Linux (target=editor,deploy=true,deploy-platform=linux,deploy-platform-target=template_release)
-            cache-name: linux-editor-deploy-linux-template-release
+          - name: linux_editor_linux_deploy
+            cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
+            sconsflags: linker=gold scu_build=yes precision=double use_llvm=yes
             doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.linuxbsd.template_release.x86_64.llvm"
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
             proj-conv: false
             artifact: true
             platform: linuxbsd
             deploy: true
             deploy-platform: linux
-            deploy-platform-target: template_release
+            export-platform: Linux
+            deploy-platform-target: editor
 
     steps:
-      - uses: actions/checkout@v3
-
-      # Need newer mesa for lavapipe to work properly.
-      - name: Linux dependencies for tests
-        if: ${{ matrix.proj-test }}
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-          sudo add-apt-repository ppa:kisak/kisak-mesa
-          sudo apt-get install -qq mesa-vulkan-drivers binutils
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v3.5.2
 
       - name: Linux dependencies for gold linker
+        if: ${{ matrix.platform == 'linux' }}
         run: |
           sudo apt-get install -qq binutils
+        shell: bash
+
+      - name: Install MinGW
+        if: ${{ matrix.deploy-platform == 'windows' }}
+        run: |
+          sudo add-apt-repository ppa:savoury1/build-tools
+          sudo apt-get update
+          sudo apt-get install mingw-w64
+          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+        shell: bash
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
@@ -82,7 +91,7 @@ jobs:
 
       - name: Set up Emscripten latest
         if: ${{ matrix.platform == 'web' }}
-        uses: mymindstorm/setup-emsdk@v11
+        uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
@@ -91,18 +100,21 @@ jobs:
         if: ${{ matrix.platform == 'web' }}
         run: |
           emcc -v
+        shell: bash
 
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
+        with:
+          godot-ref: "groups-4.2"
 
       - name: Set up .NET Sdk
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
         if: ${{ matrix.build-mono }}
         with:
           dotnet-version: "6.0.x"
 
       - name: Setup GCC problem matcher
-        uses: ammaraskar/gcc-problem-matcher@master
+        uses: ammaraskar/gcc-problem-matcher@d1fed1fac9e94d30e23b5a82dba4e2963e71d2e7 # master
 
       - name: Compilation
         uses: ./.github/actions/godot-build
@@ -112,63 +124,92 @@ jobs:
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
           deploy: ${{ matrix.deploy }}
-          deploy-platform:  ${{ matrix.deploy-platform }}
+          deploy-platform: ${{ matrix.deploy-platform }}
           deploy-platform-target: ${{ matrix.deploy-platform-target }}
+
+      - name: Compilation
+        if: ${{ matrix.deploy-platform == 'windows' }}
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          platform: ${{ matrix.platform }}
+          target: ${{ matrix.target }}
+          tests: false
+          deploy: false
+          deploy-platform: ${{ matrix.platform }}
+          deploy-platform-target: ${{ matrix.target }}
+
+      - name: Generate build constants
+        uses: ./.github/actions/vsk-generate-constants
 
       - name: Export Game
         if: ${{ matrix.deploy }}
         run: |
-          mkdir -p .godot/editor .godot/imported export_linux
+          mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/vsk_model_explorer_${{ matrix.deploy-platform }}.pck --path .
-      - name: Prepare artifacts
-        if: ${{ matrix.deploy && matrix.deploy-platform == 'windows' }}
-        run: |
-          rm -rf vsk_model_explorer_${{ matrix.deploy-platform }}
-          export TARGET=vsk_model_explorer_${{ matrix.deploy-platform }}
-          mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.exe
-          cp -rf vsk_model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.pck
-          7z a -r $TARGET.zip $TARGET
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
+        timeout-minutes: 10
         shell: bash
 
       - name: Prepare artifacts
-        if: ${{ matrix.deploy && matrix.deploy-platform != 'windows' }}
+        if: ${{ matrix.deploy }}
         run: |
-          rm -rf vsk_model_explorer_${{ matrix.deploy-platform }}
-          export TARGET=vsk_model_explorer_${{ matrix.deploy-platform }}
+          tree -L 1
+          # Check if the .pck file exists
+          if [ ! -f ./vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: vsekai_game_${{ matrix.deploy-platform }}.pck does not exist."
+              exit 1
+          fi
+
+          # Check if the path to the .pck file is correct
+          if [ ! -f `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to vsekai_game_${{ matrix.deploy-platform }}.pck is incorrect."
+              exit 1
+          fi
+
+          rm -rf vsekai_game_${{ matrix.deploy-platform }}
+          export TARGET=vsekai_game_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}
-          cp -rf vsk_model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/vsk_model_explorer_${{ matrix.deploy-platform }}.pck
+
+          # If deploy platform is windows, append .exe to the binary
+          if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}.exe
+          else
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
+          fi
+
+          cp -rf `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
+          7z a -r $TARGET.zip $TARGET
         shell: bash
 
       - name: Upload Godot Artifact Export
         if: ${{ matrix.deploy }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
-          name: vsk_model_explorer_${{ matrix.deploy-platform }}_x86_64
+          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
           path: |
-            vsk_model_explorer_${{ matrix.deploy-platform }}
+            vsekai_game_${{ matrix.deploy-platform }}
 
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
           ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue || true
+        shell: bash
 
       - name: Build .NET solutions
         if: ${{ matrix.build-mono }}
         run: |
           ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
+        shell: bash
 
-      # Execute unit tests for the editor
       - name: Unit tests
         if: ${{ matrix.tests }}
         run: |
           ${{ matrix.bin }} --version
           ${{ matrix.bin }} --help
           ${{ matrix.bin }} --test --headless
+        shell: bash
 
-      # Check class reference
       - name: Check for class reference updates
         if: ${{ matrix.doc-test }}
         run: |
@@ -176,8 +217,8 @@ jobs:
           echo -e "If a diff is shown, it means that your code/doc changes are incomplete and you should update the class reference with --doctool.\n\n"
           ${{ matrix.bin }} --doctool --headless 2>&1 > /dev/null || true
           git diff --color --exit-code && ! git ls-files --others --exclude-standard | sed -e 's/^/New doc file missing in PR: /' | grep 'xml$'
+        shell: bash
 
-      # Test 3.x -> 4.x project converter
       - name: Test project converter
         if: ${{ matrix.proj-conv }}
         run: |
@@ -187,68 +228,63 @@ jobs:
           ${{ matrix.bin }} --headless --validate-conversion-3to4
           cd ..
           rm converter_test -rf
-
-      # Download and extract zip archive with project, folder is renamed to be able to easy change used project
-      - name: Download test project
-        if: ${{ matrix.proj-test }}
-        run: |
-          wget https://github.com/godotengine/regression-test-project/archive/4.0.zip
-          unzip 4.0.zip
-          mv "regression-test-project-4.0" "test_project"
-
-      # Editor is quite complicated piece of software, so it is easy to introduce bug here
-      - name: Open and close editor (Vulkan)
-        if: ${{ matrix.proj-test }}
-        run: |
-          xvfb-run ${{ matrix.bin }} --audio-driver Dummy --editor --quit --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      - name: Open and close editor (GLES3)
-        if: ${{ matrix.proj-test }}
-        run: |
-          DRI_PRIME=0 xvfb-run ${{ matrix.bin }} --audio-driver Dummy --rendering-driver opengl3 --editor --quit --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      # Run test project
-      - name: Run project
-        if: ${{ matrix.proj-test }}
-        run: |
-          xvfb-run ${{ matrix.bin }} 40 --audio-driver Dummy --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      # Checkout godot-cpp
-      - name: Checkout godot-cpp
-        if: ${{ matrix.godot-cpp-test }}
-        uses: actions/checkout@v3
-        with:
-          repository: godotengine/godot-cpp
-          submodules: "recursive"
-          path: "godot-cpp"
-
-      # Dump GDExtension interface and API
-      - name: Dump GDExtension interface and API for godot-cpp build
-        if: ${{ matrix.godot-cpp-test }}
-        run: |
-          ${{ matrix.bin }} --headless --dump-gdextension-interface --dump-extension-api
-          cp -f gdextension_interface.h godot-cpp/gdextension/
-          cp -f extension_api.json godot-cpp/gdextension/
-
-      # Build godot-cpp test extension
-      - name: Build godot-cpp test extension
-        if: ${{ matrix.godot-cpp-test }}
-        run: |
-          cd godot-cpp/test
-          scons target=template_debug dev_build=yes
-          cd ../..
+        shell: bash
 
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
           chmod +x godot/bin/godot.* || true
-          chmod +x godot/bin/libgodot.* || true
+        shell: bash
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
         if: ${{ matrix.artifact }}
         with:
           name: ${{ matrix.cache-name }}
+
+      - name: Upload editor artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.artifact }}
+        with:
+          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
+          path: |
+            ./godot/bin/${{ matrix.editor-bin-name }}
+
+  release:
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: List files
+        run: |
+          ls -R vsekai_game_windows_x86_64
+          ls -R vsekai_game_linux_x86_64
+          ls -R linux-editor-deploy-windows-editor
+          ls -R linux-editor-deploy-linux-editor
+        shell: bash
+        
+      - name: Archive files
+        run: |
+          zip -r vsekai_game_windows_x86_64.zip vsekai_game_windows_x86_64
+          zip -r vsekai_game_linux_x86_64.zip vsekai_game_linux_x86_64
+          zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
+          zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
+
+      - name: Create and Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            vsekai_game_windows_x86_64.zip
+            vsekai_game_linux_x86_64.zip
+            linux-editor-deploy-windows-editor.zip
+            linux-editor-deploy-linux-editor.zip
+          body: "This is a V-Sekai/V-Sekai-game release"
+          generate_release_notes: true
+          draft: true
+          prerelease: true
+          append_body: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
