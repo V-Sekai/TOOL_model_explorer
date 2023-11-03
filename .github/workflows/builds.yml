@@ -147,7 +147,7 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck --path . || true
         timeout-minutes: 10
         shell: bash
 
@@ -156,29 +156,29 @@ jobs:
         run: |
           tree -L 1
           # Check if the .pck file exists
-          if [ ! -f ./vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: vsekai_game_${{ matrix.deploy-platform }}.pck does not exist."
+          if [ ! -f ./model_explorer_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: model_explorer_${{ matrix.deploy-platform }}.pck does not exist."
               exit 1
           fi
 
           # Check if the path to the .pck file is correct
-          if [ ! -f `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: The path to vsekai_game_${{ matrix.deploy-platform }}.pck is incorrect."
+          if [ ! -f `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to model_explorer_${{ matrix.deploy-platform }}.pck is incorrect."
               exit 1
           fi
 
-          rm -rf vsekai_game_${{ matrix.deploy-platform }}
-          export TARGET=vsekai_game_${{ matrix.deploy-platform }}
+          rm -rf model_explorer_${{ matrix.deploy-platform }}
+          export TARGET=model_explorer_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
 
           # If deploy platform is windows, append .exe to the binary
           if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}.exe
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/model_explorer_${{ matrix.deploy-platform }}.exe
           else
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/model_explorer_${{ matrix.deploy-platform }}
           fi
 
-          cp -rf `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
+          cp -rf `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/model_explorer_${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
 
@@ -186,9 +186,9 @@ jobs:
         if: ${{ matrix.deploy }}
         uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
-          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
+          name: model_explorer_${{ matrix.deploy-platform }}_x86_64
           path: |
-            vsekai_game_${{ matrix.deploy-platform }}
+            model_explorer_${{ matrix.deploy-platform }}
 
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
@@ -246,7 +246,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: ${{ matrix.artifact }}
         with:
-          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
+          name: model_explorer_${{ matrix.deploy-platform }}_x86_64
           path: |
             ./godot/bin/${{ matrix.editor-bin-name }}
 
@@ -260,16 +260,16 @@ jobs:
 
       - name: List files
         run: |
-          ls -R vsekai_game_windows_x86_64
-          ls -R vsekai_game_linux_x86_64
+          ls -R model_explorer_windows_x86_64
+          ls -R model_explorer_linux_x86_64
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
         shell: bash
         
       - name: Archive files
         run: |
-          zip -r vsekai_game_windows_x86_64.zip vsekai_game_windows_x86_64
-          zip -r vsekai_game_linux_x86_64.zip vsekai_game_linux_x86_64
+          zip -r model_explorer_windows_x86_64.zip model_explorer_windows_x86_64
+          zip -r model_explorer_linux_x86_64.zip model_explorer_linux_x86_64
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
 
@@ -277,8 +277,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            vsekai_game_windows_x86_64.zip
-            vsekai_game_linux_x86_64.zip
+            model_explorer_windows_x86_64.zip
+            model_explorer_linux_x86_64.zip
             linux-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
           body: "This is a V-Sekai/V-Sekai-game release"
