@@ -6,9 +6,11 @@ V-Sekai Model Explorer is a 3D model viewer built with Godot 4. It supports vari
     <img src=".github/Screenshot 2023-09-21 105018.png" alt="Model Explorer Image">
 </div>
 
+> :warning: **Warning**: This tool uses a custom fork of Godot for 4.3 FBX import. Please check the releases section for more details. [Releases Section](https://github.com/V-Sekai/TOOL_model_explorer/releases)
+
 ## Release notes
 
-`.vrm`, `.glb`, and `.gltf` files can be viewed.
+`.fbx`, `.vrm`, `.glb`, and `.gltf` files can be viewed.
 
 ## Features
 
@@ -26,4 +28,4 @@ V-Sekai Model Explorer is a 3D model viewer built with Godot 4. It supports vari
 
 Thanks to AllenDang for creating the original version.
 
-https://github.com/AllenDang/model_explorer_godot4
+[AllenDang's Model Explorer](https://github.com/AllenDang/model_explorer_godot4)
