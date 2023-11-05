@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  GAME_NAME: vsekai_game_
+  GAME_NAME: model_explorer_
   GODOT_REF: groups-4.2.2023-11-03T221353Z
   GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
