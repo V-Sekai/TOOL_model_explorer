@@ -316,7 +316,7 @@ jobs:
             linux-editor-deploy-linux-editor.zip
             macos-editor-deploy-macos-editor.zip
           generate_release_notes: true
-          draft: true
+          draft: false
           prerelease: true
           append_body: true
         env:
