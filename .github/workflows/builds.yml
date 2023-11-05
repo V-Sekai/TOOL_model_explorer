@@ -38,8 +38,8 @@ jobs:
             sconsflags: linker=gold precision=double use_mingw=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
-            editor-bin-name: godot.windows.editor.double.x86_64.exe
+            deploy-bin: ./godot/bin/godot.windows.double.x86_64.exe
+            deploy-bin-name: godot.windows.double.x86_64.exe
             proj-conv: false
             artifact: true
             platform: linuxbsd
@@ -48,7 +48,7 @@ jobs:
             deploy-platform: windows
             export-platform: Windows
             arch: _x86_64
-            deploy-platform-target: editor
+            deploy-platform-target: template_release
 
           - name: linux_editor_linux_deploy
             runs-on: ubuntu-22.04
@@ -58,8 +58,8 @@ jobs:
             sconsflags: linker=gold precision=double use_llvm=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: ./godot/bin/godot.linuxbsd.double.x86_64.llvm
+            deploy-bin-name: godot.linuxbsd.editor.x86_64.llvm
             proj-conv: false
             artifact: true
             platform: linuxbsd
@@ -67,7 +67,7 @@ jobs:
             deploy-platform: linux
             export-platform: Linux
             arch: _x86_64
-            deploy-platform-target: editor
+            deploy-platform-target: template_release
 
           - name: macos_editor_macos_deploy
             runs-on: "macos-latest"
@@ -77,8 +77,8 @@ jobs:
             sconsflags: linker=gold precision=double
             doc-test: false
             bin: ./godot/bin/godot.macos.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
-            editor-bin-name: godot.macos.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.macos.double.x86_64
+            deploy-bin-name: godot.macos.double.x86_64
             proj-conv: false
             artifact: true
             platform: macos
@@ -86,7 +86,7 @@ jobs:
             deploy-platform: macos
             export-platform: Mac
             arch: _x86_64
-            deploy-platform-target: editor
+            deploy-platform-target: template_release
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
@@ -293,18 +293,18 @@ jobs:
         run: |
           ls -R ${{ env.GAME_NAME }}windows${{ matrix.arch }}
           ls -R ${{ env.GAME_NAME }}linux${{ matrix.arch }}
-          ls -R linux-editor-deploy-windows-editor
-          ls -R linux-editor-deploy-linux-editor
-          ls -R macos-editor-deploy-macos-editor
+          ls -R linux-editor-deploy-windows-${{ matrix.deploy-platform-target }}
+          ls -R linux-editor-deploy-linux-${{ matrix.deploy-platform-target }}
+          ls -R macos-editor-deploy-macos-${{ matrix.deploy-platform-target }}
         shell: bash
 
       - name: Archive files
         run: |
           zip -r ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
           zip -r ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux${{ matrix.arch }}
-          zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
-          zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
-          zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
+          zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-${{ matrix.deploy-platform-target }}
+          zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-${{ matrix.deploy-platform-target }}
+          zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-${{ matrix.deploy-platform-target }}
 
       - name: Create and Upload Release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
@@ -312,9 +312,9 @@ jobs:
           files: |
             ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip
             ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip
-            linux-editor-deploy-windows-editor.zip
-            linux-editor-deploy-linux-editor.zip
-            macos-editor-deploy-macos-editor.zip
+            linux-editor-deploy-windows-${{ matrix.deploy-platform-target }}.zip
+            linux-editor-deploy-linux-${{ matrix.deploy-platform-target }}.zip
+            macos-editor-deploy-macos-${{ matrix.deploy-platform-target }}.zip
           generate_release_notes: true
           draft: false
           prerelease: true
