@@ -5,17 +5,18 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
   pull_request:
 
 env:
-  GODOT_BASE_BRANCH: master
+  GAME_NAME: vsekai_game_
+  GODOT_REF: groups-4.2.2023-11-03T221353Z
+  GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   EM_VERSION: 3.1.18
   EM_CACHE_FOLDER: "emsdk-cache"
-  OSXCROSS_ROOT: /tmp/
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-deploy
@@ -23,17 +24,18 @@ concurrency:
 
 jobs:
   build:
-    runs-on: "ubuntu-22.04"
+    runs-on: ${{ matrix.runs-on }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: linux_editor_win_deploy
+            runs-on: ubuntu-22.04
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
+            sconsflags: linker=gold precision=double use_mingw=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
@@ -45,13 +47,15 @@ jobs:
             deploy-pdb: true
             deploy-platform: windows
             export-platform: Windows
+            arch: _x86_64
             deploy-platform-target: editor
 
           - name: linux_editor_linux_deploy
+            runs-on: ubuntu-22.04
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_llvm=yes
+            sconsflags: linker=gold precision=double use_llvm=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
             deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
@@ -62,9 +66,33 @@ jobs:
             deploy: true
             deploy-platform: linux
             export-platform: Linux
+            arch: _x86_64
             deploy-platform-target: editor
 
+          - name: macos_editor_macos_deploy
+            runs-on: "macos-latest"
+            cache-name: macos-editor-deploy-macos-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.macos.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
+            editor-bin-name: godot.macos.editor.double.x86_64
+            proj-conv: false
+            artifact: true
+            platform: macos
+            deploy: true
+            deploy-platform: macos
+            export-platform: Mac
+            arch: _x86_64
+            deploy-platform-target: editor
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v3.5.2
 
       - name: Linux dependencies for gold linker
@@ -89,23 +117,29 @@ jobs:
           cache-name: ${{ matrix.cache-name }}
         continue-on-error: true
 
+      - name: Setup Vulkan SDK
+        if: ${{ matrix.platform == 'macos' }}
+        run: |
+          sh ./.github/install_vulkan_sdk_macos.sh
+
       - name: Set up Emscripten latest
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
 
       - name: Verify Emscripten setup
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         run: |
           emcc -v
         shell: bash
 
-      - name: Setup python and scons
+      - name: Setup python, scons and golang
         uses: ./.github/actions/godot-deps
         with:
-          godot-ref: "groups-4.2"
+          godot-ref: ${{ env.GODOT_REF }}
+          godot-repository: ${{ env.GODOT_REPOSITORY }}
 
       - name: Set up .NET Sdk
         uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
@@ -128,7 +162,7 @@ jobs:
           deploy-platform-target: ${{ matrix.deploy-platform-target }}
 
       - name: Compilation
-        if: ${{ matrix.deploy-platform == 'windows' }}
+        if: ${{ matrix.deploy-platform == 'windows' || matrix.deploy-platform == 'web' }}
         uses: ./.github/actions/godot-build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
@@ -147,38 +181,38 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck --path . || true
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck --path . || true
         timeout-minutes: 10
         shell: bash
 
       - name: Prepare artifacts
         if: ${{ matrix.deploy }}
         run: |
-          tree -L 1
+          ls
           # Check if the .pck file exists
-          if [ ! -f ./model_explorer_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: model_explorer_${{ matrix.deploy-platform }}.pck does not exist."
+          if [ ! -f ./${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck does not exist."
               exit 1
           fi
 
           # Check if the path to the .pck file is correct
-          if [ ! -f `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: The path to model_explorer_${{ matrix.deploy-platform }}.pck is incorrect."
+          if [ ! -f `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck is incorrect."
               exit 1
           fi
 
-          rm -rf model_explorer_${{ matrix.deploy-platform }}
-          export TARGET=model_explorer_${{ matrix.deploy-platform }}
+          rm -rf ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          export TARGET=${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           mkdir -p $TARGET
 
           # If deploy platform is windows, append .exe to the binary
           if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/model_explorer_${{ matrix.deploy-platform }}.exe
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.exe
           else
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/model_explorer_${{ matrix.deploy-platform }}
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           fi
 
-          cp -rf `pwd`/model_explorer_${{ matrix.deploy-platform }}.pck $TARGET/model_explorer_${{ matrix.deploy-platform }}.pck
+          cp -rf `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
 
@@ -186,9 +220,9 @@ jobs:
         if: ${{ matrix.deploy }}
         uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
-          name: model_explorer_${{ matrix.deploy-platform }}_x86_64
+          name: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           path: |
-            model_explorer_${{ matrix.deploy-platform }}
+            ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
 
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
@@ -242,46 +276,45 @@ jobs:
         with:
           name: ${{ matrix.cache-name }}
 
-      - name: Upload editor artifacts
-        uses: actions/upload-artifact@v3
-        if: ${{ matrix.artifact }}
-        with:
-          name: model_explorer_${{ matrix.deploy-platform }}_x86_64
-          path: |
-            ./godot/bin/${{ matrix.editor-bin-name }}
-
   release:
     needs: [build]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
+        with:
+          egress-policy: audit
+
       - name: Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
 
       - name: List files
         run: |
-          ls -R model_explorer_windows_x86_64
-          ls -R model_explorer_linux_x86_64
+          ls -R ${{ env.GAME_NAME }}windows${{ matrix.arch }}
+          ls -R ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
+          ls -R macos-editor-deploy-macos-editor
         shell: bash
-        
+
       - name: Archive files
         run: |
-          zip -r model_explorer_windows_x86_64.zip model_explorer_windows_x86_64
-          zip -r model_explorer_linux_x86_64.zip model_explorer_linux_x86_64
+          zip -r ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
+          zip -r ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
+          zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
 
       - name: Create and Upload Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
         with:
           files: |
-            model_explorer_windows_x86_64.zip
-            model_explorer_linux_x86_64.zip
+            ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip
+            ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip
             linux-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
-          body: "This is a V-Sekai/V-Sekai-game release"
+            macos-editor-deploy-macos-editor.zip
           generate_release_notes: true
           draft: true
           prerelease: true
