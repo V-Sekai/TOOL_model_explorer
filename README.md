@@ -42,7 +42,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://chibifire.com"><img src="https://avatars.githubusercontent.com/u/32321?v=4?s=100" width="100px;" alt="K. S. Ernest (iFire) Lee"/><br /><sub><b>K. S. Ernest (iFire) Lee</b></sub></a><br /><a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=fire" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Illauriel"><img src="https://avatars.githubusercontent.com/u/10573379?v=4?s=100" width="100px;" alt="Illauriel"/><br /><sub><b>Illauriel</b></sub></a><br /><a href="#ideas-Illauriel" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=Illauriel" title="Code">💻</a> <a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=Illauriel" title="Tests">⚠️</a></td>
     </tr>
   </tbody>
 </table>

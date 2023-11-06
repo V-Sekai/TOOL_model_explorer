@@ -8,11 +8,23 @@
   "commitConvention": "angular",
   "contributors": [
     {
+      "login": "Illauriel",
+      "name": "Illauriel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10573379?v=4",
+      "profile": "https://github.com/Illauriel",
+      "contributions": [
+        "ideas",
+        "code",
+        "test"
+      ]
+    },
+    {
       "login": "fire",
       "name": "K. S. Ernest (iFire) Lee",
       "avatar_url": "https://avatars.githubusercontent.com/u/32321?v=4",
       "profile": "https://chibifire.com",
       "contributions": [
+        "ideas",
         "code"
       ]
     }
