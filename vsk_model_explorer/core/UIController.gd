@@ -41,12 +41,13 @@ func _process(_delta):
 	if Input.is_action_just_pressed("toggle_grid"):
 		CbHideGrid.button_pressed = not CbHideGrid.button_pressed
 	
-func _on_scroll_input(event, from_control : Tree, adjustment : int):
+func _on_scroll_input(event, from_control : Tree):
 	
 	if event is InputEventMouseButton:
 		var child_count = from_control.get_root().get_child_count()
 		var child_size : int = from_control.get_item_area_rect(from_control.get_root().get_first_child()).size.y
-		var max_scroll = child_count*(child_size + 5) - from_control.size.y + 52 + adjustment
+		var h_scroll_adjustment = 10* int(from_control.get_column_width(0) > from_control.size.x)
+		var max_scroll = child_count*(child_size + 5) - from_control.size.y + 52 + h_scroll_adjustment
 		
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP and from_control.get_scroll().y == 0 and max_scroll > 0:
 			from_control.accept_event()
@@ -130,7 +131,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 		meshInfoTree.item_selected.connect(_on_mesh_item_selected.bind(meshInfoTree))
 		meshInfoTree.item_activated.connect(_on_mesh_item_double_clicked.bind(meshInfoTree))
 		
-		meshInfoTree.gui_input.connect(_on_scroll_input.bind(meshInfoTree, 0))
+		meshInfoTree.gui_input.connect(_on_scroll_input.bind(meshInfoTree))
 
 		meshInfoTree.set_column_title(0, "Mesh (%d)" % meshes.size())
 
@@ -216,7 +217,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 
 			materialInfoTree.item_activated.connect(_on_material_item_double_clicked.bind(materialInfoTree))
 			
-			materialInfoTree.gui_input.connect(_on_scroll_input.bind(materialInfoTree, 10))
+			materialInfoTree.gui_input.connect(_on_scroll_input.bind(materialInfoTree))
 
 			materialInfoTree.set_column_title(0, "Material (%d)" % material_array.size())
 
@@ -275,7 +276,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 
 			textureInfoTree.item_activated.connect(_on_texture_double_clicked.bind(textureInfoTree))
 			
-			textureInfoTree.gui_input.connect(_on_scroll_input.bind(textureInfoTree, 10))
+			textureInfoTree.gui_input.connect(_on_scroll_input.bind(textureInfoTree))
 
 			textureInfoTree.set_column_title(0, "Texture (%d)" % texture_array.size())
 
@@ -329,7 +330,7 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 
 			animationTree.item_activated.connect(_on_animation_item_double_clicked.bind(animationTree))
 			
-			animationTree.gui_input.connect(_on_scroll_input.bind(animationTree, 0))
+			animationTree.gui_input.connect(_on_scroll_input.bind(animationTree))
 
 			animationTree.set_column_title(0, "Animation (%d)" % animationArray.size())
 			animationTree.select_mode = Tree.SELECT_ROW
