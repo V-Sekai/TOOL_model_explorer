@@ -1,8 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gd52rvrq5aam"]
 
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/TextureViewer.gd" id="1_hbv6i"]
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/CustomCanvas.gd" id="2_enmbk"]
-
+[ext_resource type="Script" path="res://vsk_model_explorer/core/TextureViewer.gd" id="1_1cyos"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/CustomCanvas.gd" id="2_ct6l6"]
 
 [node name="TextureViewer" type="PanelContainer"]
 custom_minimum_size = Vector2(800, 800)
@@ -17,7 +16,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_hbv6i")
+script = ExtResource("1_1cyos")
 
 [node name="Row" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -51,4 +50,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_enmbk")
+script = ExtResource("2_ct6l6")

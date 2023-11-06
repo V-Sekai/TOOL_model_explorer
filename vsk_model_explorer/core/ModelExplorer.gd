@@ -6,7 +6,7 @@ signal fbx_start_to_load
 signal fbx_is_loaded(success:bool, fbx:Node)
 
 
-const Worker = preload("res://vsk_model_explorer/script/Worker.gd")
+const Worker = preload("res://vsk_model_explorer/core/Worker.gd")
 var worker: Worker
 	
 const gltf_vrm_extension_const = preload("res://addons/vrm/vrm_extension.gd")

@@ -1,13 +1,13 @@
 [gd_scene load_steps=17 format=3 uid="uid://dvpfndtt8epxg"]
 
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/ModelExplorer.gd" id="1_nw81i"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/ModelExplorer.gd" id="1_nw81i"]
 [ext_resource type="Shader" path="res://vsk_model_explorer/shader/Grid.gdshader" id="2_c212q"]
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/CamController.gd" id="3_7quse"]
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/UIController.gd" id="4_3e4pv"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/CamController.gd" id="3_7quse"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/UIController.gd" id="4_3e4pv"]
 [ext_resource type="Texture2D" uid="uid://dngs678q2vwu2" path="res://vsk_model_explorer/texture/T_ProgressCircle_BG.png" id="5_ki67k"]
 [ext_resource type="Texture2D" uid="uid://ciy2pu22x0j1w" path="res://vsk_model_explorer/texture/T_ProgressCircle_FG.png" id="6_18sj1"]
-[ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://vsk_model_explorer/scene/Theme.theme" id="6_ee8my"]
-[ext_resource type="Script" path="res://vsk_model_explorer/scene/ProgressIndicator.gd" id="7_mw4jw"]
+[ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://vsk_model_explorer/resource/Theme.theme" id="6_ee8my"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/ProgressIndicator.gd" id="7_mw4jw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_je8ca"]
 sky_top_color = Color(0.639216, 0.294118, 0.611765, 1)
@@ -64,8 +64,9 @@ attributes = SubResource("CameraAttributesPhysical_6umus")
 transform = Transform3D(0.85798, -0.214782, 0.466625, -0.00966859, 0.901478, 0.432717, -0.513591, -0.375774, 0.771374, 4.30535, 3.06095, 0)
 shadow_enabled = true
 
-[node name="Node" type="Node" parent="."]
+[node name="Node" type="Node" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("4_3e4pv")
+Grid = NodePath("../GizmoPlane")
 
 [node name="InfoPanel" type="PanelContainer" parent="Node"]
 visible = false
