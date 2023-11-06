@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dngs678q2vwu2"
-path="res://.godot/imported/T_ProgressCircle_BG.png-42d424a463665f7f4f177a489585f6c3.ctex"
+uid="uid://7e6qkgq6ud8t"
+path="res://.godot/imported/T_ProgressCircle_BG.svg-6b887bf715aa6c2db653982f7388ddd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://vsk_model_explorer/texture/T_ProgressCircle_BG.png"
-dest_files=["res://.godot/imported/T_ProgressCircle_BG.png-42d424a463665f7f4f177a489585f6c3.ctex"]
+source_file="res://vsk_model_explorer/texture/T_ProgressCircle_BG.svg"
+dest_files=["res://.godot/imported/T_ProgressCircle_BG.svg-6b887bf715aa6c2db653982f7388ddd5.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
