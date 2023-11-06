@@ -890,9 +890,10 @@ func _add_vrm_nodes_to_skin(obj: Dictionary) -> bool:
 	var new_joints_set = {}.duplicate()
 
 	var secondaryAnimation = vrm_extension.get("secondaryAnimation", {})
-	for bone_group in secondaryAnimation.get("boneGroups", []):
-		for bone in bone_group["bones"]:
-			_add_joints_recursive(new_joints_set, obj["nodes"], int(bone), true)
+	for bone_group in secondaryAnimation.get("boneGroups", {}):
+		if bone_group.has("bones"):
+			for bone in bone_group["bones"]:
+				_add_joints_recursive(new_joints_set, obj["nodes"], int(bone), true)
 
 	for collider_group in secondaryAnimation.get("colliderGroups", []):
 		if int(collider_group["node"]) >= 0:
