@@ -14,10 +14,12 @@ const gltf_vrm_extension_const = preload("res://addons/vrm/vrm_extension.gd")
 var gltf_doc = GLTFDocument.new()
 var gltf_vrm_extension = gltf_vrm_extension_const.new()
 
-var fbx_doc = FBXDocument.new()
+var fbx_doc: Object = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_viewport().files_dropped.connect(_on_file_dropped)
+	if ClassDB.get_class_list().find("FBXDocument") != -1:
+		fbx_doc = ClassDB.instantiate("FBXDocument").new()
 
 
 func _on_file_dropped(files:PackedStringArray):
@@ -38,6 +40,9 @@ func _on_file_dropped(files:PackedStringArray):
 			
 			gltf_start_to_load.emit()
 		elif ext == "fbx":
+			if ClassDB.get_class_list().find("FBXDocument") == -1:
+				printerr("Use the godot-ufbx branch of Godot Engine for the new FBX Importer.")
+				return
 			fbx_start_to_load.emit()
 			
 			# unload previous loaded scene
@@ -47,8 +52,9 @@ func _on_file_dropped(files:PackedStringArray):
 			for n in loaded_nodes:
 				n.queue_free()
 
-			var fbx_state: FBXState = FBXState.new()
-			fbx_state.handle_binary_image = FBXState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED
+			var fbx_state: Object = ClassDB.instantiate("FBXState").new()
+			var handle_binary_image_enum: StringName  = ClassDB.class_get_integer_constant_enum("FBXState", "HANDLE_BINARY_EMBED_AS_UNCOMPRESSED")
+			fbx_state.set("handle_binary_image", handle_binary_image_enum)
 			var err = ERR_FILE_CANT_OPEN
 
 			err = fbx_doc.append_from_file(files[0], fbx_state)

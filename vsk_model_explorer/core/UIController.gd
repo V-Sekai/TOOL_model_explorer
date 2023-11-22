@@ -127,10 +127,12 @@ func _on_root_gltf_is_loaded(success, gltf : Node):
 				texture_array.append(texture)
 
 		const MAX_NAME_LENGTH = 30
-		for mesh: MeshInstance3D in meshes:
+		for mesh in meshes:
 			if mesh == null:
 				continue
 			if mesh.mesh == null:
+				continue
+			if mesh.get_class() != "MeshInstance3D":
 				continue
 			# Calculate max aabb
 			var aabb = mesh.mesh.get_aabb()

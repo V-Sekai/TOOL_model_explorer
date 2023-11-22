@@ -12,7 +12,7 @@ config_version=5
 
 config/name="ModelExplorer"
 run/main_scene="res://vsk_model_explorer/scene/ModelExplorer.tscn"
-config/features=PackedStringArray("4.2", "Double Precision", "Forward Plus")
+config/features=PackedStringArray("4.1", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 config/macos_native_icon="res://resource/icon/app_icon.icns"

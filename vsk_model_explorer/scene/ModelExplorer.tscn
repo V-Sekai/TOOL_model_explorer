@@ -66,7 +66,7 @@ shadow_enabled = true
 
 [node name="Node" type="Node" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("4_3e4pv")
-Grid = NodePath("../GizmoPlane")
+Grid = NodePath("")
 
 [node name="InfoPanel" type="PanelContainer" parent="Node"]
 visible = false
