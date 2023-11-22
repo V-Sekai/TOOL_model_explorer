@@ -1,6 +1,6 @@
 # V-Sekai Model Explorer
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 > :warning: **Warning**: This tool uses a custom fork of Godot for 4.3 FBX import. Please check the releases section for more details. [Releases Section](https://github.com/V-Sekai/TOOL_model_explorer/releases)
@@ -44,6 +44,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Illauriel"><img src="https://avatars.githubusercontent.com/u/10573379?v=4?s=100" width="100px;" alt="Illauriel"/><br /><sub><b>Illauriel</b></sub></a><br /><a href="#ideas-Illauriel" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=Illauriel" title="Code">💻</a> <a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=Illauriel" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://chibifire.com"><img src="https://avatars.githubusercontent.com/u/32321?v=4?s=100" width="100px;" alt="K. S. Ernest (iFire) Lee"/><br /><sub><b>K. S. Ernest (iFire) Lee</b></sub></a><br /><a href="#ideas-fire" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=fire" title="Code">💻</a> <a href="#infra-fire" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AllenDang"><img src="https://avatars.githubusercontent.com/u/18550?v=4?s=100" width="100px;" alt="Allen Dang"/><br /><sub><b>Allen Dang</b></sub></a><br /><a href="https://github.com/V-Sekai/TOOL_model_explorer/commits?author=AllenDang" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
