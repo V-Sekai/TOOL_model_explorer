@@ -31,7 +31,7 @@ func _on_reposition_camera(aabb:AABB):
 	rotation = Vector3.ZERO
 	CamRotHelper.rotation = Vector3.ZERO
 
-func _input(event):
+func _unhandled_input(event):
 	if not enable_cam_control:
 		return
 		
