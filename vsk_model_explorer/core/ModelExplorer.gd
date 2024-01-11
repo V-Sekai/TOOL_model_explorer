@@ -19,7 +19,7 @@ var fbx_doc: Object = null
 func _ready():
 	get_viewport().files_dropped.connect(_on_file_dropped)
 	if ClassDB.get_class_list().find("FBXDocument") != -1:
-		fbx_doc = ClassDB.instantiate("FBXDocument").new()
+		fbx_doc = ClassDB.instantiate("FBXDocument")
 
 
 func _on_file_dropped(files:PackedStringArray):
