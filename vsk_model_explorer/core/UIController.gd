@@ -1,3 +1,4 @@
+@uid("uid://calyigj7r8u10") # Generated automatically, do not modify.
 extends Node
 
 @export var Grid:Node
@@ -490,7 +491,7 @@ func _on_cb_hide_grid_toggled(button_pressed):
 
 func _on_mesh_clicked(_camera: Node, event: InputEvent, position: Vector3, _normal: Vector3, _shape_idx: int, mesh: MeshInstance3D):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if meshViewer != null:
+		if meshViewer != null and not meshViewer.is_queued_for_deletion():
 			meshViewer.queue_free()
 		
 		meshViewer = MeshInfoViewer.instantiate()
