@@ -52,17 +52,17 @@ func _on_file_dropped(files:PackedStringArray):
 			for n in loaded_nodes:
 				n.queue_free()
 
-			var fbx_state: Object = ClassDB.instantiate("FBXState").new()
+			var fbx_state: Object = ClassDB.instantiate("FBXState")
 			var handle_binary_image_enum: StringName  = ClassDB.class_get_integer_constant_enum("FBXState", "HANDLE_BINARY_EMBED_AS_UNCOMPRESSED")
 			fbx_state.set("handle_binary_image", handle_binary_image_enum)
 			var err = ERR_FILE_CANT_OPEN
 
-			err = fbx_doc.append_from_file(files[0], fbx_state)
+			err = fbx_doc.append_data_from_file(files[0], fbx_state)
 			
 			var fbx:Node = null
 			
 			if err == OK:
-				fbx = fbx_doc.generate_scene(fbx_state)
+				fbx = fbx_doc.create_scene(fbx_state)
 				if fbx != null:
 					fbx.add_to_group(GlobalSignal.FBX_GROUP)
 					add_child.call_deferred(fbx)
