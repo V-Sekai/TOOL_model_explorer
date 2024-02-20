@@ -1,4 +1,3 @@
-@uid("uid://calyigj7r8u10") # Generated automatically, do not modify.
 extends Node
 
 @export var Grid:Node

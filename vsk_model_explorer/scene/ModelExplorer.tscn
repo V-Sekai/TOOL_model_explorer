@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://vsk_model_explorer/core/ModelExplorer.gd" id="1_nw81i"]
 [ext_resource type="Shader" path="res://vsk_model_explorer/shader/Grid.gdshader" id="2_c212q"]
 [ext_resource type="Script" path="res://vsk_model_explorer/core/CamController.gd" id="3_7quse"]
-[ext_resource type="Script" uid="uid://calyigj7r8u10" path="res://vsk_model_explorer/core/UIController.gd" id="4_3e4pv"]
+[ext_resource type="Script" path="res://vsk_model_explorer/core/UIController.gd" id="4_3e4pv"]
 [ext_resource type="Texture2D" uid="uid://dngs678q2vwu2" path="res://vsk_model_explorer/texture/T_ProgressCircle_BG.png" id="5_ki67k"]
 [ext_resource type="Texture2D" uid="uid://ciy2pu22x0j1w" path="res://vsk_model_explorer/texture/T_ProgressCircle_FG.png" id="6_18sj1"]
 [ext_resource type="Theme" uid="uid://3n58c5iseefm" path="res://vsk_model_explorer/resource/Theme.theme" id="6_ee8my"]
