@@ -10,7 +10,7 @@ on:
 
 env:
   GAME_NAME: model_explorer_
-  GODOT_REF: groups-4.2.2023-11-21T032311Z
+  GODOT_REF: groups-4.3.2024-02-25T005650Z
   GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
