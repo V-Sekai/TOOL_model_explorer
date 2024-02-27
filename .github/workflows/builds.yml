@@ -74,7 +74,7 @@ jobs:
             cache-name: macos-editor-deploy-macos-editor
             target: editor
             tests: false
-            sconsflags: linker=gold precision=double
+            sconsflags: linker=gold precision=double vulkan_sdk_path=~/VulkanSDK/1.*
             doc-test: false
             bin: ./godot/bin/godot.macos.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
