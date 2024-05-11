@@ -10,22 +10,23 @@
 
 V-Sekai Model Explorer is a comprehensive 3D model viewer, designed with the powerful Godot 4 engine. It's an excellent tool for anyone interested in exploring the intricacies of 3D models.
 
-The application supports various model formats, including:
+<div style="width: 50%; margin: auto; overflow: hidden;">
+	<img src=".github/Screenshot 2023-09-21 105018.png" alt="Model Explorer Image">
+</div>
 
-- VRM
-- glTF 2.0
+## Features
 
-Here are some of the key features that make this tool stand out:
+| Supported Formats |
+| ----------------- |
+| VRM               |
+| glTF 2.0          |
+| FBX               |
 
 1. **Detailed Viewing**: Inspect every component of a 3D model, from meshes and materials to textures and animations.
 2. **Animation Playback**: Play back animations within the model for a dynamic viewing experience.
 3. **Interactive Controls**: Navigate around the model with ease using intuitive controls.
 4. **Double-Click Action**: Get a closer look at any part of the model with a simple double-click.
 5. **Hide Grid/Explode Meshes**: Customize your viewing experience by hiding the grid or exploding the meshes.
-
-<div style="width: 50%; margin: auto; overflow: hidden;">
-	<img src=".github/Screenshot 2023-09-21 105018.png" alt="Model Explorer Image">
-</div>
 
 ## Release notes
 
