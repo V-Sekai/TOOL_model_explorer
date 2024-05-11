@@ -25,8 +25,10 @@ MeshExt="*res://vsk_model_explorer/core/MeshExt.gd"
 
 [display]
 
-window/size/viewport_width=2880
-window/size/viewport_height=1800
+window/size/viewport_width=1280
+window/size/viewport_height=800
+window/size/extend_to_title=true
+window/energy_saving/keep_screen_on=false
 
 [editor_plugins]
 
