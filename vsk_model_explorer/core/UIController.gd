@@ -460,7 +460,7 @@ func _on_animation_item_finished(animation_name : StringName, player : Animation
 
 
 func _show_texture_viewer(tex):
-	if texViewer != null and not texViewer.is_queued_for_deletion():
+	if texViewer and not texViewer.is_queued_for_deletion():
 		texViewer.queue_free()
 
 	texViewer = TextureViewer.instantiate()

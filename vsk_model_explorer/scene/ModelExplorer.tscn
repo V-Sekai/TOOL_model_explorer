@@ -189,7 +189,7 @@ theme_override_constants/margin_bottom = 16
 [node name="Label" type="Label" parent="Node/MessagePanel/MarginContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "Drop gltf/glb/vrm/fbx file into this window"
+text = "Drop 3d model into this window"
 
 [connection signal="fbx_is_loaded" from="." to="CamController" method="_on_root_gltf_is_loaded"]
 [connection signal="fbx_is_loaded" from="." to="Node" method="_on_root_gltf_is_loaded"]

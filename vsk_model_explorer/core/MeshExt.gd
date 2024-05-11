@@ -4,7 +4,7 @@ var _outline_material: ShaderMaterial
 
 func _ready():
 	_outline_material = ShaderMaterial.new()
-	_outline_material.shader = preload("res://vsk_model_explorer/shader/Outlint.gdshader")
+	_outline_material.shader = preload("res://vsk_model_explorer/shader/Outline.gdshader")
 
 # Created and optimized by https://github.com/fire
 # Huge thank!
