@@ -23,15 +23,15 @@ void fragment() {
 	vec4 pos = INV_VIEW_MATRIX * vec4(VERTEX, 1.0);
 	vec4 clip_pos = PROJECTION_MATRIX * vec4(VERTEX, 1.0);
 	float clip_space_depth = (clip_pos.z / clip_pos.w) * 2.0 - 1.0;
-	
+
 	float near = 0.05;
 	float far = 100.0;
 	float linearDepth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near));
 	linearDepth = linearDepth / far;
 	float fading = max(0, (0.5 - linearDepth));
-	
+
     vec4 outColor = (grid(pos.xyz, 10) * 0.5 + grid(pos.xyz, 1));
-	
+
 	ALBEDO = outColor.xyz;
 	ALPHA = outColor.w * fading;
 }
