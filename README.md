@@ -6,7 +6,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-> :warning: **Warning**: This tool uses a custom fork of Godot for 4.3 FBX import. Please check the releases section for more details. [Releases Section](https://github.com/V-Sekai/TOOL_model_explorer/releases)
+> :warning: **Warning**: This tool uses a custom fork of Godot for 4.3 FBX import. Please check the releases section for more details. [groups-4.x](https://github.com/V-Sekai/godot)
 
 V-Sekai Model Explorer is a comprehensive 3D model viewer, designed with the powerful Godot 4 engine. It's an excellent tool for anyone interested in exploring the intricacies of 3D models.
 
