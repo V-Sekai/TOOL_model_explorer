@@ -76,9 +76,9 @@ jobs:
             tests: false
             sconsflags: linker=gold precision=double
             doc-test: false
-            bin: ./godot/bin/godot.macos.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
-            editor-bin-name: godot.macos.editor.double.x86_64
+            bin: ./godot/bin/godot.macos.editor.double.arm64
+            deploy-bin: ./godot/bin/godot.macos.editor.double.arm64
+            editor-bin-name: godot.macos.editor.double.arm64
             proj-conv: false
             artifact: true
             platform: macos
