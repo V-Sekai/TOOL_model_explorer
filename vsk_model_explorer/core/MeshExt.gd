@@ -8,26 +8,116 @@ func _ready():
 
 # Created and optimized by https://github.com/fire
 # Huge thank!
+# Modified to extract UVs directly from surface arrays to avoid MeshDataTool crashes
 func draw_uv_texture(mesh: Mesh) -> PackedVector2Array:
 	var uvLines: PackedVector2Array = []
 	
-	for si in mesh.get_surface_count():
-		var mesh_data_tool : MeshDataTool = MeshDataTool.new()
-		mesh_data_tool.create_from_surface(mesh, si)
-		for edge_i in mesh_data_tool.get_edge_count():
-			for vertex_i in range(2):
-				var vertex = mesh_data_tool.get_edge_vertex(edge_i, vertex_i)
-				var uv = mesh_data_tool.get_vertex_uv(vertex)
-				uvLines.push_back(uv)
+	if mesh == null:
+		return uvLines
+	
+	# Only works with ArrayMesh
+	if not (mesh is ArrayMesh):
+		return uvLines
+	
+	var array_mesh = mesh as ArrayMesh
+	
+	for si in array_mesh.get_surface_count():
+		var surface_arrays = array_mesh.surface_get_arrays(si)
 		
+		# Check for required arrays
+		if surface_arrays.size() <= ArrayMesh.ARRAY_VERTEX:
+			continue
+		var vertex_array = surface_arrays[ArrayMesh.ARRAY_VERTEX]
+		if vertex_array == null or not (vertex_array is PackedVector3Array):
+			continue
+		
+		# Check if surface has UV data
+		if surface_arrays.size() <= ArrayMesh.ARRAY_TEX_UV:
+			continue
+		var uv_array = surface_arrays[ArrayMesh.ARRAY_TEX_UV]
+		if uv_array == null or not (uv_array is PackedVector2Array):
+			continue
+		
+		# Check if surface has index array (indexed geometry)
+		var has_index = surface_arrays.size() > ArrayMesh.ARRAY_INDEX and surface_arrays[ArrayMesh.ARRAY_INDEX] != null
+		var index_array: PackedInt32Array = PackedInt32Array()
+		if has_index and surface_arrays[ArrayMesh.ARRAY_INDEX] is PackedInt32Array:
+			index_array = surface_arrays[ArrayMesh.ARRAY_INDEX]
+		
+		# Extract UV coordinates from triangle edges
+		if has_index and index_array.size() > 0:
+			# Indexed geometry - process triangles from index array
+			var triangle_count = index_array.size() / 3
+			for tri in range(triangle_count):
+				var i0 = index_array[tri * 3]
+				var i1 = index_array[tri * 3 + 1]
+				var i2 = index_array[tri * 3 + 2]
+				
+				# Add edges: (0,1), (1,2), (2,0)
+				if i0 < uv_array.size() and i1 < uv_array.size():
+					uvLines.push_back(uv_array[i0])
+					uvLines.push_back(uv_array[i1])
+				if i1 < uv_array.size() and i2 < uv_array.size():
+					uvLines.push_back(uv_array[i1])
+					uvLines.push_back(uv_array[i2])
+				if i2 < uv_array.size() and i0 < uv_array.size():
+					uvLines.push_back(uv_array[i2])
+					uvLines.push_back(uv_array[i0])
+		else:
+			# Non-indexed geometry - process sequential triangles
+			var triangle_count = vertex_array.size() / 3
+			for tri in range(triangle_count):
+				var i0 = tri * 3
+				var i1 = tri * 3 + 1
+				var i2 = tri * 3 + 2
+				
+				# Add edges: (0,1), (1,2), (2,0)
+				if i0 < uv_array.size() and i1 < uv_array.size():
+					uvLines.push_back(uv_array[i0])
+					uvLines.push_back(uv_array[i1])
+				if i1 < uv_array.size() and i2 < uv_array.size():
+					uvLines.push_back(uv_array[i1])
+					uvLines.push_back(uv_array[i2])
+				if i2 < uv_array.size() and i0 < uv_array.size():
+					uvLines.push_back(uv_array[i2])
+					uvLines.push_back(uv_array[i0])
+	
 	return uvLines
 
 func face_count(mesh: Mesh) -> int:
 	var current_face_count : int = 0
-	for si in mesh.get_surface_count():
-		var mesh_data_tool : MeshDataTool = MeshDataTool.new()
-		mesh_data_tool.create_from_surface(mesh, si)
-		current_face_count = current_face_count + mesh_data_tool.get_face_count()
+	
+	if mesh == null:
+		return current_face_count
+	
+	# Only works with ArrayMesh
+	if not (mesh is ArrayMesh):
+		return current_face_count
+	
+	var array_mesh = mesh as ArrayMesh
+	
+	for si in array_mesh.get_surface_count():
+		var surface_arrays = array_mesh.surface_get_arrays(si)
+		
+		# Check for required arrays
+		if surface_arrays.size() <= ArrayMesh.ARRAY_VERTEX:
+			continue
+		var vertex_array = surface_arrays[ArrayMesh.ARRAY_VERTEX]
+		if vertex_array == null or not (vertex_array is PackedVector3Array):
+			continue
+		
+		# Count triangles from index array or vertex array
+		var has_index = surface_arrays.size() > ArrayMesh.ARRAY_INDEX and surface_arrays[ArrayMesh.ARRAY_INDEX] != null
+		if has_index and surface_arrays[ArrayMesh.ARRAY_INDEX] is PackedInt32Array:
+			var index_array = surface_arrays[ArrayMesh.ARRAY_INDEX] as PackedInt32Array
+			# Index array should be divisible by 3 for triangles
+			if index_array.size() % 3 == 0:
+				current_face_count += index_array.size() / 3
+		else:
+			# Non-indexed geometry - count sequential triangles
+			if vertex_array.size() % 3 == 0:
+				current_face_count += vertex_array.size() / 3
+	
 	return current_face_count
 
 
