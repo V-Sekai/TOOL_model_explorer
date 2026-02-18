@@ -110,12 +110,12 @@ func _load_file(file_path: String):
 		fbx_state.set("handle_binary_image", handle_binary_image_enum)
 		var err = ERR_FILE_CANT_OPEN
 
-		err = fbx_doc.append_data_from_file(normalized_path, fbx_state)
+		err = fbx_doc.append_from_file(normalized_path, fbx_state)
 		
 		var fbx:Node = null
 		
 		if err == OK:
-			fbx = fbx_doc.create_scene(fbx_state)
+			fbx = fbx_doc.generate_scene(fbx_state)
 			if fbx != null:
 				fbx.add_to_group(GlobalSignal.FBX_GROUP)
 				add_child.call_deferred(fbx)
